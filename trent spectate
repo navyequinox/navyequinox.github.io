@@ -219,6 +219,7 @@ end)
 deleteGui.MouseButton1Click:Connect(function()
 	if #spectatePlayers > 0 then
         spectateFrame:Destroy()
+        spectateButton:Destroy()
 	end
 end)
 
