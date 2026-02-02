@@ -206,16 +206,6 @@ leftArrow.MouseButton1Click:Connect(function()
 	end
 end)
 
-leftArrow.MouseButton1Click:Connect(function()
-	if #spectatePlayers > 0 then
-		repeat
-			currentIndex = currentIndex - 1
-			if currentIndex < 1 then currentIndex = #spectatePlayers end
-		until isAlive(spectatePlayers[currentIndex])
-		spectate(spectatePlayers[currentIndex])
-	end
-end)
-
 deleteGui.MouseButton1Click:Connect(function()
 	if #spectatePlayers > 0 then
         spectateFrame:Destroy()
