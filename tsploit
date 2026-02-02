@@ -1,0 +1,383 @@
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+	Name = "trentxploitr",
+	Icon = 108289954, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+	LoadingTitle = "Trentalicious!",
+	LoadingSubtitle = "Trent",
+	ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
+	Theme = {
+		TextColor = Color3.fromRGB(255, 0, 0),
+
+		Background = Color3.fromRGB(0, 0, 0),
+		Topbar = Color3.fromRGB(0, 0, 0),
+		Shadow = Color3.fromRGB(0, 0, 0),
+
+		NotificationBackground = Color3.fromRGB(0, 0, 0),
+		NotificationActionsBackground = Color3.fromRGB(0, 0, 0),
+
+		TabBackground = Color3.fromRGB(0, 0, 0),
+		TabStroke = Color3.fromRGB(255, 0, 0),
+		TabBackgroundSelected = Color3.fromRGB(0, 0, 0),
+		TabTextColor = Color3.fromRGB(255, 0, 0),
+		SelectedTabTextColor = Color3.fromRGB(255, 0, 0),
+
+		ElementBackground = Color3.fromRGB(0, 0, 0),
+		ElementBackgroundHover = Color3.fromRGB(0, 0, 0),
+		SecondaryElementBackground = Color3.fromRGB(0, 0, 0),
+		ElementStroke = Color3.fromRGB(0, 0, 0),
+		SecondaryElementStroke = Color3.fromRGB(0, 0, 0),
+
+		SliderBackground = Color3.fromRGB(0, 0, 0),
+		SliderProgress = Color3.fromRGB(100, 0, 0),
+		SliderStroke = Color3.fromRGB(0, 0, 0),
+
+		ToggleBackground = Color3.fromRGB(0, 0, 0),
+		ToggleEnabled = Color3.fromRGB(255, 0, 0),
+		ToggleDisabled = Color3.fromRGB(39, 0, 0),
+		ToggleEnabledStroke = Color3.fromRGB(255, 0, 0),
+		ToggleDisabledStroke = Color3.fromRGB(38, 0, 0),
+		ToggleEnabledOuterStroke = Color3.fromRGB(255, 0, 0),
+		ToggleDisabledOuterStroke = Color3.fromRGB(0, 0, 0),
+
+		DropdownSelected = Color3.fromRGB(0, 0, 0),
+		DropdownUnselected = Color3.fromRGB(0, 0, 0),
+
+		InputBackground = Color3.fromRGB(0, 0, 0),
+		InputStroke = Color3.fromRGB(0, 0, 0),
+		PlaceholderColor = Color3.fromRGB(255, 0, 0)
+	}, -- Check https://docs.sirius.menu/rayfield/configuration/themes
+
+	ToggleUIKeybind = "V", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+
+	DisableRayfieldPrompts = false,
+	DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = nil, -- Create a custom folder for your hub/game
+		FileName = "VVV"
+	},
+
+	Discord = {
+		Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
+		Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
+		RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+	},
+
+	KeySystem = false, -- Set this to true to use our key system
+	KeySettings = {
+		Title = "trentxploitr",
+		Subtitle = "Password:",
+		Note = "No method is given to you.", -- Use this to tell the user how to get a key
+		FileName = "trentxploitr", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
+		SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
+		GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
+		Key = {"Trentalicious!67"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+	}
+})
+
+local Tab = Window:CreateTab("Player", "square-user")
+local LBBGTab = Window:CreateTab("LBBG", 8277401585)
+local TRDTab = Window:CreateTab("TRD", 8277401585)
+
+local Slider = Tab:CreateSlider({
+	Name = "Sprint",
+	Range = {0, 1000},
+	Increment = 1,
+	Suffix = "",
+	CurrentValue = 10,
+	Flag = "Slider1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(Value)
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value	
+	end,
+})
+
+local Slider = Tab:CreateSlider({
+	Name = "Leap",
+	Range = {0, 1000},
+	Increment = 1,
+	Suffix = "",
+	CurrentValue = 10,
+	Flag = "Slider2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(Value)
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+	end,
+})
+
+local spinning = false
+local spinSpeed = 0
+local spinConnection = nil
+
+local Slider = Tab:CreateSlider({
+	Name = "Spin",
+	Range = {0, 100},
+	Increment = 1,
+	Suffix = "",
+	CurrentValue = 10,
+	Flag = "Slider3", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(spin)
+		spinSpeed = spin
+		if spin > 0 then
+			spinning = true
+		else
+			spinning = false
+		end
+	end,
+})
+
+local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+
+game:GetService("RunService").RenderStepped:Connect(function()
+	if spinning and character and character:FindFirstChild("HumanoidRootPart") then
+		character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(spinSpeed), 0)
+	end
+end)
+
+local Button = Tab:CreateButton({
+	Name = "Default Preset",
+	Callback = function()
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+	end,
+})
+
+local Button = Tab:CreateButton({
+	Name = "Superhuman Preset",
+	Callback = function()
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 150
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+	end,
+})
+
+local Toggle = Tab:CreateToggle({
+    Name = "Infinite Jump",
+    CurrentValue = false,
+    Flag = "T1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(InfJumpBool)
+        local InfiniteJumpEnabled = InfJumpBool
+        game:GetService("UserInputService").JumpRequest:connect(function()
+            if InfiniteJumpEnabled then
+                game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+            end
+        end)
+    end,
+ })
+
+local Button = LBBGTab:CreateButton({
+	Name = "Every Block (1000x blocks total. Will lag.)",
+	Callback = function()
+		for i = 1, 100 do
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnSuperBlock:FireServer()
+			game.ReplicatedStorage.SpawnDiamondBlock:FireServer()
+			game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+			game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+			game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+			game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+		end
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Galaxy Block (1x)",
+	Callback = function()
+		game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Galaxy Block (100x)",
+	Callback = function()
+		for i = 1, 100 do
+			game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+		end
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Rainbow Block (1x)",
+	Callback = function()
+		game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Rainbow Block (100x)",
+	Callback = function()
+		for i = 1, 100 do
+			game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+		end
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Diamond Block (1x)",
+	Callback = function()
+		game.ReplicatedStorage.SpawnDiamondBlock:FireServer()
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Diamond Block (100x)",
+	Callback = function()
+		for i = 1, 100 do
+			game.ReplicatedStorage.SpawnDiamondBlock:FireServer()
+		end
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Super Block (1x)",
+	Callback = function()
+		game.ReplicatedStorage.SpawnSuperBlock:FireServer()
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Super Block (100x)",
+	Callback = function()
+		for i = 1, 100 do
+			game.ReplicatedStorage.SpawnSuperBlock:FireServer()
+		end
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Normal Block (1x)",
+	Callback = function()
+		game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "Normal Block (100x)",
+	Callback = function()
+		for i = 1, 100 do
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+		end
+	end,
+})
+
+local Button = TRDTab:CreateButton({
+	Name = "Gives statue",
+	Callback = function()
+        for i, v in pairs(workspace.Idols:GetDescendants()) do
+            if v.Name == "Bag" then
+                v.hit.Transparency = 1
+                v.hit.CanCollide = false
+                task.wait()
+                v.hit.Position = game.Players.LocalPlayer.Character.Torso.Position
+                task.wait()
+                v:Destroy()
+                task.wait()
+            elseif v.Name == "SafetyStatue" then
+                v.hit.Transparency = 1
+                v.hit.CanCollide = false
+                task.wait()
+                v.hit.Position = game.Players.LocalPlayer.Character.Torso.Position
+                task.wait()
+            end
+        end
+	end,
+})
+
+local Button = TRDTab:CreateButton({
+	Name = "Win all challenges",
+	Callback = function()
+
+	end,
+})
+
+
+local Toggle = TRDTab:CreateToggle({
+    Name = "Win Math Mania",
+    CurrentValue = false,
+    Flag = "T2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        local number = 0
+
+        for i = 1, 10 do
+            task.wait()
+
+            if Value == true then
+                number = number + 1
+                local mathManiaGui = game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("MathMania")
+
+                if mathManiaGui and mathManiaGui:FindFirstChild(tostring(number)) then
+                    local questionGui = mathManiaGui[tostring(number)]
+                    local s = questionGui.MainText.Text
+
+                    -- Remove equals, question mark, spaces
+                    local clean = s:gsub("=", ""):gsub("?", ""):gsub(" ", "")
+                    local result = loadstring("return " .. clean)()
+
+                    if result then
+                        questionGui.Box.Text = tostring(result)
+                        task.wait()
+
+                        local button = questionGui:FindFirstChild("Enter")
+                        if button then
+                            local events = {"MouseButton1Click", "MouseButton1Down", "Activated"}
+
+                            for _, event in pairs(events) do
+                                if getconnections and button[event] then
+                                    for _, connection in pairs(getconnections(button[event])) do
+                                        if connection.Function then
+                                            connection:Fire()
+                                        end
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+
+    end,
+ })
+
+ local Button = TRDTab:CreateButton({
+	Name = "Come  back [F]",
+	Callback = function()
+        --[[
+	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
+]]
+local args = {
+    [1] = "Gender",
+    [2] = "Female"
+}
+
+game:GetService("ReplicatedStorage").Events.Buy:FireServer(unpack(args))
+	end,
+})
+
+local Button = TRDTab:CreateButton({
+	Name = "Come  back [M]",
+	Callback = function()
+
+	end,
+})
+
+local Toggle = TRDTab:CreateToggle({
+    Name = "Reveal votes",
+    CurrentValue = false,
+    Flag = "T2", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(VoteBool)
+        game.ReplicatedStorage.Season.Voting.Votes.ChildAdded:Connect(function(v)
+			if VoteBool == true then
+				local PlayerVoted = game.ReplicatedStorage.Season.Players[v.Value].Value
+				local PlayerPicked = game.ReplicatedStorage.Season.Players[v.Name].Value
+				local SEND = PlayerVoted .. " voted for " .. PlayerPicked
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(SEND, "All")
+				else return
+			end
+		end)
+    end,
+ })
+
+
