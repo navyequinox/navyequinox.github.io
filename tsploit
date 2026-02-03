@@ -344,9 +344,6 @@ local Toggle = TRDTab:CreateToggle({
  local Button = TRDTab:CreateButton({
 	Name = "Come  back [F]",
 	Callback = function()
-        --[[
-	WARNING: Heads up! This script has not been verified by ScriptBlox. Use at your own risk!
-]]
 local args = {
     [1] = "Gender",
     [2] = "Female"
@@ -359,7 +356,12 @@ game:GetService("ReplicatedStorage").Events.Buy:FireServer(unpack(args))
 local Button = TRDTab:CreateButton({
 	Name = "Come  back [M]",
 	Callback = function()
+local args = {
+    [1] = "Gender",
+    [2] = "Male"
+}
 
+game:GetService("ReplicatedStorage").Events.Buy:FireServer(unpack(args))
 	end,
 })
 
@@ -372,12 +374,15 @@ local Toggle = TRDTab:CreateToggle({
 			if VoteBool == true then
 				local PlayerVoted = game.ReplicatedStorage.Season.Players[v.Value].Value
 				local PlayerPicked = game.ReplicatedStorage.Season.Players[v.Name].Value
-				local SEND = PlayerVoted .. " voted for " .. PlayerPicked
-				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(SEND, "All")
+				Rayfield:Notify({
+                    Title = "Vote Spy",
+                    Content = PlayerVoted .. " voted for " .. PlayerPicked,
+                    Duration = 10,
+                    Image = "eye"
+                })
+				game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(Rayfield:Notify(), "All")
 				else return
 			end
 		end)
     end,
  })
-
-
