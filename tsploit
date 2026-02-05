@@ -335,12 +335,23 @@ local Button = TRDTab:CreateButton({
 	end,
 })
 
-local Button = TRDTab:CreateButton({
-	Name = "Win all challenges",
-	Callback = function()
 
-	end,
-})
+local Toggle = TRDTab:CreateToggle({
+    Name = "Win all challenges",
+    CurrentValue = false,
+    Flag = "T67", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+		if Value == true then
+			local finish = game.Workspace.Assets:FindFirstChild("Finish", true)
+			if finish then
+				finish.CanCollide = false
+				finish.Transparency = 1
+				wait()
+				finish.Position = game.Players.LocalPlayer.Character.Torso.Position
+			end
+		end
+    end,
+ })
 
 
 local Toggle = TRDTab:CreateToggle({
