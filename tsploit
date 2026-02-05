@@ -153,7 +153,7 @@ local Button = Tab:CreateButton({
 local Toggle = Tab:CreateToggle({
     Name = "Infinite Jump",
     CurrentValue = false,
-    Flag = "T1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Flag = "T1",
     Callback = function(InfJumpBool)
         local InfiniteJumpEnabled = InfJumpBool
         game:GetService("UserInputService").JumpRequest:connect(function()
@@ -386,3 +386,46 @@ local Toggle = TRDTab:CreateToggle({
 		end)
     end,
  })
+
+ local Button = LBBGTab:CreateButton({
+	Name = "Every Block (1000x blocks total. Will lag.)",
+	Callback = function()
+		for i = 1, 100 do
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnSuperBlock:FireServer()
+			game.ReplicatedStorage.SpawnDiamondBlock:FireServer()
+			game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+			game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+			game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+			game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+		end
+	end,
+})
+
+local Button = LBBGTab:CreateButton({
+	Name = "I dont care anymore send ten million blocks",
+	Callback = function()
+		for i = 1, 1000000 do
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnLuckyBlock:FireServer()
+			game.ReplicatedStorage.SpawnSuperBlock:FireServer()
+			game.ReplicatedStorage.SpawnDiamondBlock:FireServer()
+			game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+			game.ReplicatedStorage.SpawnRainbowBlock:FireServer()
+			game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+			game.ReplicatedStorage.SpawnGalaxyBlock:FireServer()
+		end
+	end,
+})
+
+local Button = Tab:CreateButton({
+	Name = "Spectator",
+	Callback = function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/navyequinox/navyequinox.github.io/refs/heads/main/trent%20spectate"))()
+	end,
+})
