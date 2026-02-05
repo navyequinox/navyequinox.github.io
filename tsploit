@@ -105,6 +105,19 @@ local Slider = Tab:CreateSlider({
 	end,
 })
 
+local Slider = Tab:CreateSlider({
+	Name = "Health",
+	Range = {0, 1000},
+	Increment = 1,
+	Suffix = "",
+	CurrentValue = 10,
+	Flag = "Slider4", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(Value)
+		game.Players.LocalPlayer.Character.Humanoid.MaxHealth = Value
+	end,
+})
+
+
 local spinning = false
 local spinSpeed = 0
 local spinConnection = nil
@@ -126,6 +139,7 @@ local Slider = Tab:CreateSlider({
 	end,
 })
 
+
 local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
 
 game:GetService("RunService").RenderStepped:Connect(function()
@@ -134,11 +148,45 @@ game:GetService("RunService").RenderStepped:Connect(function()
 	end
 end)
 
+local players = game:GetService("Players")
+local player = players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:FindFirstChildOfClass("Humanoid")
+
+local Toggle = Tab:CreateToggle({
+    Name = "[Title Card]",
+    CurrentValue = false,
+    Flag = "T2",
+    Callback = function(Value)
+if Value == true then
+	if humanoid then
+		humanoid.Health = humanoid.MaxHealth
+			while true do
+				task.wait(0.1)
+					if humanoid.Health < humanoid.MaxHealth then
+					humanoid.Health = humanoid.MaxHealth
+				end
+			end
+		end
+	end
+end,
+ })
+
+ local Button = Tab:CreateButton({
+	Name = "Full Heal",
+	Callback = function()
+		humanoid.Health = humanoid.MaxHealth
+	end,
+})
+
+
 local Button = Tab:CreateButton({
 	Name = "Default Preset",
 	Callback = function()
 		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 50
 		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16
+		game.Players.LocalPlayer.Character.Humanoid.MaxHealth = 100
+		game.Players.LocalPlayer.Character.Humanoid.Health = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
 	end,
 })
 
@@ -147,6 +195,8 @@ local Button = Tab:CreateButton({
 	Callback = function()
 		game.Players.LocalPlayer.Character.Humanoid.JumpPower = 150
 		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 100
+		game.Players.LocalPlayer.Character.Humanoid.MaxHealth = 10000
+		game.Players.LocalPlayer.Character.Humanoid.Health = game.Players.LocalPlayer.Character.Humanoid.MaxHealth
 	end,
 })
 
