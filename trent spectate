@@ -1,0 +1,251 @@
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
+local camera = workspace.CurrentCamera
+
+-- GUI Setup (bottom-left)
+local screenGui = Instance.new("ScreenGui")
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local spectateButton = Instance.new("TextButton")
+spectateButton.Size = UDim2.new(0, 120, 0, 40)
+spectateButton.Position = UDim2.new(0, 10, 1, -50)
+spectateButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+spectateButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+spectateButton.Text = "View Players"
+spectateButton.Font = Enum.Font.SourceSans
+spectateButton.TextScaled = true
+spectateButton.AutoButtonColor = true
+local UIStroke = Instance.new("UIStroke", spectateButton)
+spectateButton.Parent = screenGui
+UIStroke.LineJoinMode = Enum.LineJoinMode.Miter
+UIStroke.Color = Color3.fromRGB(255, 0, 0)
+
+
+local spectateFrame = Instance.new("Frame")
+spectateFrame.Size = UDim2.new(0, 250, 0, 60)
+spectateFrame.Position = UDim2.new(0, 10, 1, -120)
+spectateFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+spectateFrame.Visible = false
+local UIStroke = Instance.new("UIStroke", spectateFrame)
+spectateFrame.Parent = screenGui
+UIStroke.LineJoinMode = Enum.LineJoinMode.Miter
+UIStroke.Color = Color3.fromRGB(255, 0, 0)
+
+local leftArrow = Instance.new("TextButton")
+leftArrow.Size = UDim2.new(0, 30, 0, 30)
+leftArrow.Position = UDim2.new(0, 0, 0, 0)
+leftArrow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+leftArrow.TextColor3 = Color3.fromRGB(255, 0, 0)
+leftArrow.Text = ">>"
+leftArrow.Font = Enum.Font.SourceSans
+leftArrow.TextScaled = true
+local UIStroke = Instance.new("UIStroke", leftArrow)
+leftArrow.Parent = spectateFrame
+UIStroke.LineJoinMode = Enum.LineJoinMode.Miter
+UIStroke.Color = Color3.fromRGB(255, 0, 0)
+
+local deleteGui = Instance.new("TextButton")
+deleteGui.Size = UDim2.new(0, 30, 0, 30)
+deleteGui.Position = UDim2.new(0, 0, 0, -30)
+deleteGui.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+deleteGui.TextColor3 = Color3.fromRGB(255, 0, 0)
+deleteGui.Text = "X"
+deleteGui.Font = Enum.Font.SourceSans
+deleteGui.TextScaled = true
+local UIStroke = Instance.new("UIStroke", deleteGui)
+deleteGui.Parent = spectateFrame
+UIStroke.LineJoinMode = Enum.LineJoinMode.Miter
+UIStroke.Color = Color3.fromRGB(255, 0, 0)
+
+
+local rightArrow = Instance.new("TextButton")
+rightArrow.Size = UDim2.new(0, 40, 1, 0)
+rightArrow.Position = UDim2.new(1, -40, 40, 0)
+rightArrow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+rightArrow.TextColor3 = Color3.fromRGB(255, 0, 0)
+rightArrow.Text = ">>"
+rightArrow.Font = Enum.Font.SourceSans
+rightArrow.TextScaled = true
+local UIStroke = Instance.new("UIStroke", rightArrow)
+rightArrow.Parent = spectateFrame
+UIStroke.LineJoinMode = Enum.LineJoinMode.Miter
+UIStroke.Color = Color3.fromRGB(255, 0, 0)
+
+
+local playerNameLabel = Instance.new("TextLabel")
+playerNameLabel.Size = UDim2.new(1, -80, 1, 0)
+playerNameLabel.Position = UDim2.new(0, 40, 0, 0)
+playerNameLabel.BackgroundTransparency = 1
+playerNameLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+playerNameLabel.Font = Enum.Font.SourceSans
+playerNameLabel.TextScaled = true
+playerNameLabel.Text = "None"
+playerNameLabel.Parent = spectateFrame
+
+-- Teleport Button
+local teleportButton = Instance.new("TextButton")
+teleportButton.Size = UDim2.new(0, 30, 0, 30)
+teleportButton.Position = UDim2.new(0, 0, 0, 30)
+teleportButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+teleportButton.TextColor3 = Color3.fromRGB(255, 0, 0)
+teleportButton.Text = "Warp"
+teleportButton.Font = Enum.Font.SourceSans
+teleportButton.TextScaled = true
+local UIStroke = Instance.new("UIStroke", teleportButton)
+teleportButton.Parent = spectateFrame
+UIStroke.LineJoinMode = Enum.LineJoinMode.Miter
+UIStroke.Color = Color3.fromRGB(255, 0, 0)
+
+
+
+-- Variables
+local spectating = false
+local currentIndex = 1
+local spectatePlayers = {}
+
+-- Update list of players
+local function updatePlayerList()
+	spectatePlayers = {}
+	for _, plr in ipairs(Players:GetPlayers()) do
+		if plr ~= player then
+			table.insert(spectatePlayers, plr)
+		end
+	end
+end
+
+local function isAlive(target)
+	return target 
+	   and target.Character 
+	   and target.Character:FindFirstChild("Humanoid") 
+	   and target.Character.Humanoid.Health > 0
+end
+
+local function updateNameColor(target)
+	if target and target.Team ~= player.Team then
+		playerNameLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+	else
+		playerNameLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+	end
+end
+
+-- Smooth name animation
+local function animateNameChange(newName)
+	local tweenInfo = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+	local fadeOut = TweenService:Create(playerNameLabel, tweenInfo, {TextTransparency = 1})
+	fadeOut:Play()
+	fadeOut.Completed:Wait()
+	playerNameLabel.Text = newName
+	local fadeIn = TweenService:Create(playerNameLabel, tweenInfo, {TextTransparency = 0})
+	fadeIn:Play()
+end
+
+local function spectate(target)
+	if isAlive(target) then
+		camera.CameraSubject = target.Character.Humanoid
+		camera.CameraType = Enum.CameraType.Custom
+		animateNameChange(target.Name)
+		updateNameColor(target)
+	else
+		if #spectatePlayers > 0 then
+			local startIndex = currentIndex
+			repeat
+				currentIndex = currentIndex + 1
+				if currentIndex > #spectatePlayers then currentIndex = 1 end
+				if currentIndex == startIndex then break end
+			until isAlive(spectatePlayers[currentIndex])
+			if isAlive(spectatePlayers[currentIndex]) then
+				spectate(spectatePlayers[currentIndex])
+			else
+				playerNameLabel.Text = "None"
+				playerNameLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+				camera.CameraSubject = player.Character:FindFirstChild("Humanoid")
+			end
+		else
+			playerNameLabel.Text = "None"
+			playerNameLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+			camera.CameraSubject = player.Character:FindFirstChild("Humanoid")
+		end
+	end
+end
+
+-- Toggle spectate
+spectateButton.MouseButton1Click:Connect(function()
+	spectating = not spectating
+	spectateFrame.Visible = spectating
+	updatePlayerList()
+	if spectating then
+		if spectatePlayers[currentIndex] and isAlive(spectatePlayers[currentIndex]) then
+			spectate(spectatePlayers[currentIndex])
+		else
+			for i, plr in ipairs(spectatePlayers) do
+				if isAlive(plr) then
+					currentIndex = i
+					spectate(plr)
+					break
+				end
+			end
+		end
+	else
+		if player.Character and player.Character:FindFirstChild("Humanoid") then
+			camera.CameraSubject = player.Character.Humanoid
+		end
+	end
+end)
+
+-- Arrow buttons
+leftArrow.MouseButton1Click:Connect(function()
+	if #spectatePlayers > 0 then
+		repeat
+			currentIndex = currentIndex - 1
+			if currentIndex < 1 then currentIndex = #spectatePlayers end
+		until isAlive(spectatePlayers[currentIndex])
+		spectate(spectatePlayers[currentIndex])
+	end
+end)
+
+deleteGui.MouseButton1Click:Connect(function()
+	if #spectatePlayers > 0 then
+        spectateFrame:Destroy()
+        spectateButton:Destroy()
+	end
+end)
+
+
+rightArrow.MouseButton1Click:Connect(function()
+	if #spectatePlayers > 0 then
+		repeat
+			currentIndex = currentIndex + 1
+			if currentIndex > #spectatePlayers then currentIndex = 1 end
+		until isAlive(spectatePlayers[currentIndex])
+		spectate(spectatePlayers[currentIndex])
+	end
+end)
+
+-- Teleport
+teleportButton.MouseButton1Click:Connect(function()
+	local target = spectatePlayers[currentIndex]
+	if target and isAlive(target) and target.Character and target.Character:FindFirstChild("HumanoidRootPart") then
+		local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+		if hrp then
+			hrp.CFrame = target.Character.HumanoidRootPart.CFrame + Vector3.new(0,3,0)
+		end
+	end
+end)
+
+Players.PlayerAdded:Connect(updatePlayerList)
+Players.PlayerRemoving:Connect(updatePlayerList)
+
+RunService.RenderStepped:Connect(function()
+	if spectating and #spectatePlayers > 0 then
+		if not isAlive(spectatePlayers[currentIndex]) then
+			spectate(spectatePlayers[currentIndex])
+		else
+			updateNameColor(spectatePlayers[currentIndex])
+		end
+	end
+end)
+
+updatePlayerList()
