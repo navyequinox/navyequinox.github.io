@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Experience the ultimate V86 x86 emulator web interface featuring 15+ vintage operating systems running directly in your browser. Launch Windows 1.01, Windows 98, Windows NT 4.0, Windows NT 5.0, Windows 2000, Windows XP, ReactOS, Haiku, Android x86, and Damn Small Linux without any downloads or installations. Our comprehensive emulation platform uses cutting-edge WebAssembly technology to deliver near-native performance for retro computing enthusiasts, educators, and software preservation specialists. Features include pre-configured operating systems with optimal memory settings, custom OS upload capabilities for .img and .iso files, advanced Windows NT compatibility modes with CPUID configuration, full mouse and keyboard capture with special key injection, hardware-accurate scancode generation, and comprehensive system controls. Perfect for educational purposes, software testing, vintage gaming, computing history exploration, and digital preservation projects. The interface supports configurable RAM from 128MB to 1GB, video memory options up to 64MB, flexible boot order selection, and real-time emulator status monitoring. Compatible with all modern browsers including Chrome, Firefox, Safari, and Edge. No plugins required - just open and start computing with authentic vintage operating system experiences powered by the renowned V86 emulator engine.">
+    <meta name="keywords" content="V86, x86 emulator, vintage OS, Windows 98, Windows XP, ReactOS, browser emulator, retro computing, operating system emulation">
+    <meta name="author" content="V86 Web Interface">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://oses.ioblako.com/">
+    <meta property="og:title" content="V86 x86 Emulator - Run Vintage Operating Systems in Browser">
+    <meta property="og:description" content="Experience classic operating systems like Windows 98, XP, and ReactOS directly in your browser. No downloads required - powered by WebAssembly.">
+    <meta property="og:image" content="https://oses.ioblako.com/assets/og-image.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://oses.ioblako.com/">
+    <meta property="twitter:title" content="V86 x86 Emulator - Run Vintage Operating Systems in Browser">
+    <meta property="twitter:description" content="Experience classic operating systems like Windows 98, XP, and ReactOS directly in your browser. No downloads required - powered by WebAssembly.">
+    <meta property="twitter:image" content="https://oses.ioblako.com/assets/og-image.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://oses.ioblako.com/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    
+    <!-- Schema.org structured data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "V86 x86 Emulator Web Interface",
+        "description": "Web-based x86 emulator running vintage operating systems in browser using WebAssembly",
+        "url": "https://oses.ioblako.com/",
+        "applicationCategory": "EmulatorApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "copy (Fabian Hemmer)"
+        },
+        "softwareVersion": "1.0",
+        "datePublished": "2025-09-18",
+        "programmingLanguage": ["JavaScript", "WebAssembly"],
+        "featureList": [
+            "x86 Processor Emulation",
+            "Multiple Operating Systems",
+            "Browser-based Execution",
+            "No Installation Required",
+            "Vintage OS Preservation"
+        ]
+    }
+    </script>
+    
+    <title>V86 x86 Emulator - Run Vintage Operating Systems in Your Browser</title>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .hero {
+            margin-bottom: 60px;
+        }
+        
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .cta-button.primary {
+            background: rgba(255, 255, 255, 0.9);
+            color: #764ba2;
+        }
+        
+        .cta-button.primary:hover {
+            background: white;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .feature p {
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .os-preview {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 40px;
+        }
+        
+        .os-preview h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        
+        .os-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .os-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .os-tag.clickable {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .os-tag.clickable:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        .footer {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cta-button {
+                width: 250px;
+            }
+            body {
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+            .container {
+                padding: 24px 16px;
+            }
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            .os-preview {
+                padding: 20px;
+            }
+            .os-list {
+                gap: 10px;
+            }
+            .os-tag {
+                font-size: 0.85rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="hero">
+            <h1>V86 x86 Emulator</h1>
+            <p>Experience vintage operating systems directly in your browser. No downloads, no installation - just pure nostalgia powered by cutting-edge WebAssembly technology.</p>
+        </div>
+        
+        <div class="cta-buttons">
+            <a href="new.html" class="cta-button primary">🚀 Launch OS Collection</a>
+            <a href="main.html" class="cta-button">📁 Upload Custom OS</a>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🖥️</div>
+                <h3>14+ Operating Systems</h3>
+                <p>Pre-configured collection from Windows 1.01 to modern alternatives like ReactOS and Haiku. Each system optimized for best performance.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>WebAssembly Powered</h3>
+                <p>Near-native performance using WebAssembly technology. Full x86 processor emulation running entirely in your browser.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🎮</div>
+                <h3>Full Interaction</h3>
+                <p>Complete mouse and keyboard support with special key injection. Hardware-accurate scancode generation for perfect compatibility.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">💾</div>
+                <h3>Custom Upload</h3>
+                <p>Upload your own .img and .iso files. Configurable memory settings and boot order for maximum compatibility.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔧</div>
+                <h3>No Installation</h3>
+                <p>Everything runs in your browser. No plugins, no downloads, no security concerns. Just open and start computing.</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">📚</div>
+                <h3>Educational Purpose</h3>
+                <p>Perfect for education, software preservation, and experiencing computing history. Learn how operating systems evolved.</p>
+            </div>
+        </div>
+        
+        <div class="os-preview">
+            <h2>Available Operating Systems</h2>
+            <p>Explore decades of computing history with our curated collection</p>
+            <div class="os-list">
+                <div class="os-tag">Windows 1.01</div>
+                <div class="os-tag">Windows 2.x</div>
+                <div class="os-tag">Windows 3.0/3.11</div>
+                <div class="os-tag">Windows 98</div>
+                <div class="os-tag clickable" onclick="launchWindowsNT()">Windows NT 4.0</div>
+                <div class="os-tag">Windows NT 5.0</div>
+                <div class="os-tag">Windows 2000</div>
+                <div class="os-tag">Windows XP</div>
+                <div class="os-tag">Windows CE 5.0</div>
+                <div class="os-tag">ReactOS</div>
+                <div class="os-tag">Haiku</div>
+                <div class="os-tag">Android x86</div>
+                <div class="os-tag">Damn Small Linux</div>
+                <div class="os-tag">Hiren's Boot CD</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by <a href="https://github.com/copy/v86" target="_blank">V86 Emulator</a> by <strong>copy (Fabian Hemmer)</strong></p>
+            <p><strong>GitHub Project:</strong> <a href="https://github.com/TheEvalon/x86" target="_blank">github.com/TheEvalon/x86</a></p>
+            <p>Educational and preservation purposes only • <a href="README.md">Documentation</a></p>
+            <p><strong>Side Project:</strong> <a href="https://games.ioblako.com" target="_blank">games.ioblako.com</a></p>
+            <p>Contact us: <a href="mailto:info@iOblako.com">info@iOblako.com</a></p>
+        </div>
+    </div>
+
+    <script>
+        function launchWindowsNT() {
+            // Redirect to new.html with Windows NT 4.0 auto-launch
+            // We'll use URL parameters to auto-launch the OS
+            window.location.href = 'new.html?autolaunch=windowsnt4';
+        }
+    </script>
+</body>
+</html>

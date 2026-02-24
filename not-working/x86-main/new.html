@@ -1,0 +1,1382 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Launch 15+ pre-configured vintage operating systems instantly in your browser with the V86 OS Launcher. Experience authentic retro computing with Windows 1.01, Windows 2.x, Windows 3.0/3.11, Windows 98, Windows NT 4.0, Windows NT 5.0, Windows 2000, Windows XP, Windows CE 5.0, ReactOS, Haiku, Android x86, Damn Small Linux, Hiren's Boot CD, and CE Collections. Each system is optimally configured with appropriate RAM allocations, automatic Windows NT compatibility for NT-based systems, and seamless browser integration. Features include one-click OS launching, automatic CPUID configuration for older operating systems, comprehensive mouse and keyboard capture with special key injection, hardware-accurate scancode generation, and real-time emulator status monitoring. Perfect for educational purposes, software preservation, vintage gaming, computing history exploration, and nostalgic computing experiences. The interface automatically applies optimal memory settings ranging from 4MB for Windows 1.01 to 512MB for modern systems, ensures proper Windows NT compatibility with CPUID level 2 and ACPI disabled for NT 4.0, NT 5.0, Windows 2000, and XP, and provides comprehensive system controls including capture management and special key combinations. Built on cutting-edge WebAssembly technology for near-native performance without any downloads, installations, or plugins required. Compatible with all modern browsers and designed for maximum accessibility and user experience.">
+    <meta name="keywords" content="V86 OS launcher, Windows 98, Windows XP, ReactOS, Haiku, vintage OS, retro computing, browser emulation, operating systems collection">
+    <meta name="author" content="V86 Web Interface">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="V86 OS Launcher - 14+ Vintage Operating Systems">
+    <meta property="og:description" content="Experience Windows 98, XP, ReactOS, and more vintage operating systems directly in your browser.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://oses.ioblako.com/new.html">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://oses.ioblako.com/new.html">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "V86 OS Launcher",
+        "description": "Pre-configured vintage operating systems collection for V86 emulator",
+        "url": "https://oses.ioblako.com/new.html",
+        "applicationCategory": "EmulatorApplication",
+        "operatingSystem": "Web Browser",
+        "featureList": [
+            "Windows 1.01 - 1985 first Windows version",
+            "Windows 98 - Popular 9x series",
+            "Windows XP - Luna interface",
+            "ReactOS - Open source Windows NT clone",
+            "Haiku - BeOS-inspired modern OS",
+            "Android x86 - Android for PC",
+            "Damn Small Linux - Tiny Linux distribution"
+        ]
+    }
+    </script>
+    
+    <title>V86 OS Launcher - 14+ Vintage Operating Systems</title>
+    
+    <!-- JSZip for handling .zip HDD images -->
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        
+        .os-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .os-card {
+            background: #fff;
+            border: 2px solid #ecf0f1;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .os-card:hover {
+            border-color: #3498db;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .os-card.hdd {
+            border-left: 4px solid #27ae60;
+        }
+        
+        .os-card.iso {
+            border-left: 4px solid #e74c3c;
+        }
+        
+        .os-card.dual {
+            border-left: 4px solid #9b59b6;
+        }
+        
+        .os-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .os-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        .os-type {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+        
+        .os-type.hdd {
+            background: #d5f4e6;
+            color: #27ae60;
+        }
+        
+        .os-type.iso {
+            background: #fadbd8;
+            color: #e74c3c;
+        }
+        
+        .os-type.dual {
+            background: #ebdef0;
+            color: #9b59b6;
+        }
+        
+        .os-description {
+            font-size: 14px;
+            color: #7f8c8d;
+            line-height: 1.4;
+            margin-bottom: 15px;
+        }
+        
+        .launch-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+        
+        .launch-button:hover {
+            background: #2980b9;
+        }
+        
+        .dual-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .dual-buttons .launch-button {
+            flex: 1;
+        }
+        
+        .hdd-button {
+            background: #27ae60;
+        }
+        
+        .hdd-button:hover {
+            background: #229954;
+        }
+        
+        .iso-button {
+            background: #e74c3c;
+        }
+        
+        .iso-button:hover {
+            background: #c0392b;
+        }
+        
+        .emulator-container {
+            display: none;
+            padding: 20px;
+            background: #000;
+            min-height: 400px;
+        }
+        
+        .emulator-controls {
+            padding: 15px 20px;
+            background: #ecf0f1;
+            border-bottom: 1px solid #bdc3c7;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .control-button {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .control-button:hover {
+            background: #7f8c8d;
+        }
+        
+        .control-button.active {
+            background: #e67e22;
+        }
+        
+        .back-button {
+            background: #34495e;
+        }
+        
+        .back-button:hover {
+            background: #2c3e50;
+        }
+        
+        .special-keys-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .special-keys-button {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .special-keys-button:hover:not(:disabled) {
+            background: #8e44ad;
+        }
+        
+        .special-keys-button:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .special-keys-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 200px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .special-keys-menu.show {
+            display: block;
+        }
+        
+        .key-category {
+            padding: 8px 12px;
+            background: #ecf0f1;
+            border-bottom: 1px solid #bdc3c7;
+            font-weight: 600;
+            font-size: 12px;
+            color: #2c3e50;
+            text-transform: uppercase;
+        }
+        
+        .key-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #ecf0f1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .key-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .key-item:active {
+            background: #e9ecef;
+        }
+        
+        .key-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .key-description {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        #screen_container {
+            border: 2px solid #34495e;
+            background: #000;
+            margin: 0 auto;
+            display: block;
+        }
+        
+        #screen_container div {
+            white-space: pre;
+            font: 14px 'Courier New', monospace;
+            line-height: 14px;
+            color: #c0c0c0;
+        }
+        
+        #screen_container canvas {
+            display: none;
+        }
+        
+        .status {
+            padding: 15px 20px;
+            background: #ecf0f1;
+            border-top: 1px solid #bdc3c7;
+            font-size: 14px;
+            color: #7f8c8d;
+            display: none;
+        }
+        
+        .legend {
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #ecf0f1;
+        }
+        
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+            margin-right: 8px;
+        }
+        
+        .legend-color.hdd {
+            background: #27ae60;
+        }
+        
+        .legend-color.iso {
+            background: #e74c3c;
+        }
+        
+        .legend-color.dual {
+            background: #9b59b6;
+        }
+        
+        .credits {
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+        }
+        
+        .credits-content h3 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .credits-content p {
+            margin: 8px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .credits-content a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .credits-content a:hover {
+            text-decoration: underline;
+        }
+        
+        .credits-content .disclaimer {
+            font-size: 12px;
+            color: #bdc3c7;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                padding-bottom: calc(10px + env(safe-area-inset-bottom));
+            }
+            .container {
+                border-radius: 6px;
+            }
+            .header {
+                padding: 16px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .os-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+                padding: 12px;
+            }
+            .os-card {
+                padding: 16px;
+            }
+            .os-icon {
+                font-size: 36px;
+            }
+            .os-name {
+                font-size: 16px;
+            }
+            .os-description {
+                font-size: 13px;
+            }
+            .dual-buttons {
+                flex-direction: column;
+            }
+            .launch-button,
+            .control-button,
+            .special-keys-button {
+                width: 100%;
+            }
+            .emulator-container {
+                padding: 10px;
+                min-height: 260px;
+            }
+            #screen_container {
+                width: 100%;
+                max-width: 100%;
+            }
+            #screen_container div {
+                font: 12px 'Courier New', monospace;
+                line-height: 12px;
+            }
+            .emulator-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .legend {
+                padding: 12px;
+            }
+            .legend-item {
+                margin-right: 10px;
+                font-size: 13px;
+            }
+            .credits {
+                padding: 12px;
+            }
+            .credits-content p {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>V86 Operating System Launcher</h1>
+            <p>Choose an operating system to boot in the emulator</p>
+        </div>
+        
+        <div id="os-selector" class="os-grid">
+            <!-- Windows Systems -->
+            <div class="os-card hdd" data-path="OSes/windows1/windows101.img" data-type="hdd" data-name="Windows 1.01">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows 1.01</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">The first version of Microsoft Windows from 1985</div>
+                <button class="launch-button hdd-button">Launch Windows 1.01</button>
+            </div>
+            
+            <div class="os-card hdd" data-path="OSes/windows2/windows2.img" data-type="hdd" data-name="Windows 2.x">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows 2.x</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">Early Windows with overlapping windows support</div>
+                <button class="launch-button hdd-button">Launch Windows 2.x</button>
+            </div>
+            
+            <div class="os-card iso" data-path="OSes/windows3/Win30.zip" data-type="iso" data-name="Windows 3.0">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows 3.0</div>
+                <div class="os-type iso">CD-ROM</div>
+                <div class="os-description">Major Windows release with Program Manager</div>
+                <button class="launch-button iso-button">Launch Windows 3.0</button>
+            </div>
+            
+            <div class="os-card hdd" data-path="OSes/windows311/hdd.zip" data-type="hdd" data-name="Windows 3.11">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows 3.11</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">Windows for Workgroups with networking</div>
+                <button class="launch-button hdd-button">Launch Windows 3.11</button>
+            </div>
+            
+            <div class="os-card hdd" data-path="OSes/windows98/hdd.zip" data-type="hdd" data-name="Windows 98">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows 98</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">Popular Windows 9x with Internet Explorer integration</div>
+                <button class="launch-button hdd-button">Launch Windows 98</button>
+            </div>
+            
+            <div class="os-card hdd" data-path="OSes/windowsnt4/hdd.zip" data-type="hdd" data-name="Windows NT 4.0">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows NT 4.0</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">Professional Windows with NT kernel</div>
+                <button class="launch-button hdd-button">Launch Windows NT 4.0</button>
+            </div>
+            
+            <div class="os-card hdd" data-path="OSes/windowsnt5/hdd.zip" data-type="hdd" data-name="Windows NT 5.0">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows NT 5.0</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">Advanced NT kernel with enhanced features</div>
+                <button class="launch-button hdd-button">Launch Windows NT 5.0</button>
+            </div>
+            
+            <div class="os-card hdd" data-path="OSes/windows2000/hdd.zip" data-type="hdd" data-name="Windows 2000">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows 2000</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">Business-focused Windows with improved stability</div>
+                <button class="launch-button hdd-button">Launch Windows 2000</button>
+            </div>
+            
+            <div class="os-card dual" data-hdd="OSes/windowsxp/hdd.img" data-iso="OSes/windowsxp/winxp.iso" data-type="dual" data-name="Windows XP">
+                <div class="os-icon">🪟</div>
+                <div class="os-name">Windows XP</div>
+                <div class="os-type dual">Dual Format</div>
+                <div class="os-description">Popular Windows with Luna interface</div>
+                <div class="dual-buttons">
+                    <button class="launch-button hdd-button" data-mode="hdd">Boot Installed</button>
+                    <button class="launch-button iso-button" data-mode="iso">Install from CD</button>
+                </div>
+            </div>
+            
+            <!-- Other Windows -->
+            <div class="os-card iso" data-path="OSes/windowsce5/ce5.zip" data-type="iso" data-name="Windows CE 5.0">
+                <div class="os-icon">📱</div>
+                <div class="os-name">Windows CE 5.0</div>
+                <div class="os-type iso">CD-ROM</div>
+                <div class="os-description">Embedded Windows for mobile devices</div>
+                <button class="launch-button iso-button">Launch Windows CE 5.0</button>
+            </div>
+            
+            <!-- Alternative Operating Systems -->
+            <div class="os-card iso" data-path="OSes/reactos/reactos.zip" data-type="iso" data-name="ReactOS">
+                <div class="os-icon">⚛️</div>
+                <div class="os-name">ReactOS</div>
+                <div class="os-type iso">CD-ROM</div>
+                <div class="os-description">Open source Windows NT compatible OS</div>
+                <button class="launch-button iso-button">Launch ReactOS</button>
+            </div>
+            
+            <div class="os-card hdd" data-path="OSes/Haiku/hdd.zip" data-type="hdd" data-name="Haiku">
+                <div class="os-icon">🌺</div>
+                <div class="os-name">Haiku</div>
+                <div class="os-type hdd">Hard Disk</div>
+                <div class="os-description">BeOS-inspired modern operating system</div>
+                <button class="launch-button hdd-button">Launch Haiku</button>
+            </div>
+            
+            <!-- Linux Systems -->
+            <div class="os-card iso" data-path="OSes/DSL/dsl.zip" data-type="iso" data-name="Damn Small Linux">
+                <div class="os-icon">🐧</div>
+                <div class="os-name">Damn Small Linux</div>
+                <div class="os-type iso">CD-ROM</div>
+                <div class="os-description">Tiny Linux distribution (50MB)</div>
+                <button class="launch-button iso-button">Launch DSL</button>
+            </div>
+            
+            <!-- Mobile/Embedded -->
+            <div class="os-card iso" data-path="OSes/android/android.zip" data-type="iso" data-name="Android x86">
+                <div class="os-icon">🤖</div>
+                <div class="os-name">Android x86</div>
+                <div class="os-type iso">CD-ROM</div>
+                <div class="os-description">Android ported to x86 architecture</div>
+                <button class="launch-button iso-button">Launch Android x86</button>
+            </div>
+            
+            <!-- Utility Collections -->
+            <div class="os-card iso" data-path="OSes/hbcd/hbcd.zip" data-type="iso" data-name="Hiren's Boot CD">
+                <div class="os-icon">🔧</div>
+                <div class="os-name">Hiren's Boot CD</div>
+                <div class="os-type iso">CD-ROM</div>
+                <div class="os-description">Comprehensive system rescue and repair tools</div>
+                <button class="launch-button iso-button">Launch HBCD</button>
+            </div>
+            
+            <div class="os-card iso" data-path="OSes/CECollection/CECollections.zip" data-type="iso" data-name="CE Collections">
+                <div class="os-icon">💿</div>
+                <div class="os-name">CE Collections</div>
+                <div class="os-type iso">CD-ROM</div>
+                <div class="os-description">Collection of Windows CE applications</div>
+                <button class="launch-button iso-button">Launch CE Collections</button>
+            </div>
+        </div>
+        
+        <div class="emulator-controls" id="emulator-controls">
+            <div class="control-buttons">
+                <button id="mouse-capture-btn" class="control-button">Capture Mouse</button>
+                <button id="keyboard-capture-btn" class="control-button">Capture Keyboard</button>
+                
+                <div class="special-keys-container">
+                    <button id="special-keys-btn" class="special-keys-button" disabled>
+                        Special Keys ▼
+                    </button>
+                    <div id="special-keys-menu" class="special-keys-menu">
+                        <div class="key-category">System Keys</div>
+                        <div class="key-item" data-keys="ctrl+alt+delete">
+                            <span class="key-name">Ctrl+Alt+Delete</span>
+                            <span class="key-description">System interrupt</span>
+                        </div>
+                        <div class="key-item" data-keys="ctrl+alt+end">
+                            <span class="key-name">Ctrl+Alt+End</span>
+                            <span class="key-description">Secure attention</span>
+                        </div>
+                        <div class="key-item" data-keys="ctrl+shift+escape">
+                            <span class="key-name">Ctrl+Shift+Esc</span>
+                            <span class="key-description">Task manager</span>
+                        </div>
+                        
+                        <div class="key-category">Function Keys</div>
+                        <div class="key-item" data-keys="f1">
+                            <span class="key-name">F1</span>
+                            <span class="key-description">Help</span>
+                        </div>
+                        <div class="key-item" data-keys="f2">
+                            <span class="key-name">F2</span>
+                            <span class="key-description">Rename</span>
+                        </div>
+                        <div class="key-item" data-keys="f3">
+                            <span class="key-name">F3</span>
+                            <span class="key-description">Search</span>
+                        </div>
+                        <div class="key-item" data-keys="f4">
+                            <span class="key-name">F4</span>
+                            <span class="key-description">Address bar</span>
+                        </div>
+                        <div class="key-item" data-keys="f5">
+                            <span class="key-name">F5</span>
+                            <span class="key-description">Refresh</span>
+                        </div>
+                        <div class="key-item" data-keys="f6">
+                            <span class="key-name">F6</span>
+                            <span class="key-description">Navigate</span>
+                        </div>
+                        <div class="key-item" data-keys="f7">
+                            <span class="key-name">F7</span>
+                            <span class="key-description">Spell check</span>
+                        </div>
+                        <div class="key-item" data-keys="f8">
+                            <span class="key-name">F8</span>
+                            <span class="key-description">Boot options</span>
+                        </div>
+                        <div class="key-item" data-keys="f9">
+                            <span class="key-name">F9</span>
+                            <span class="key-description">Send/Receive</span>
+                        </div>
+                        <div class="key-item" data-keys="f10">
+                            <span class="key-name">F10</span>
+                            <span class="key-description">Menu bar</span>
+                        </div>
+                        <div class="key-item" data-keys="f11">
+                            <span class="key-name">F11</span>
+                            <span class="key-description">Fullscreen</span>
+                        </div>
+                        <div class="key-item" data-keys="f12">
+                            <span class="key-name">F12</span>
+                            <span class="key-description">Save as</span>
+                        </div>
+                        
+                        <div class="key-category">Navigation Keys</div>
+                        <div class="key-item" data-keys="alt+tab">
+                            <span class="key-name">Alt+Tab</span>
+                            <span class="key-description">Switch windows</span>
+                        </div>
+                        <div class="key-item" data-keys="alt+f4">
+                            <span class="key-name">Alt+F4</span>
+                            <span class="key-description">Close window</span>
+                        </div>
+                        <div class="key-item" data-keys="windows">
+                            <span class="key-name">Windows Key</span>
+                            <span class="key-description">Start menu</span>
+                        </div>
+                        <div class="key-item" data-keys="menu">
+                            <span class="key-name">Menu Key</span>
+                            <span class="key-description">Context menu</span>
+                        </div>
+                        
+                        <div class="key-category">Special Characters</div>
+                        <div class="key-item" data-keys="printscreen">
+                            <span class="key-name">Print Screen</span>
+                            <span class="key-description">Screenshot</span>
+                        </div>
+                        <div class="key-item" data-keys="scrolllock">
+                            <span class="key-name">Scroll Lock</span>
+                            <span class="key-description">Scroll mode</span>
+                        </div>
+                        <div class="key-item" data-keys="pause">
+                            <span class="key-name">Pause/Break</span>
+                            <span class="key-description">System pause</span>
+                        </div>
+                        <div class="key-item" data-keys="insert">
+                            <span class="key-name">Insert</span>
+                            <span class="key-description">Insert mode</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button id="back-button" class="control-button back-button">← Back to OS Selection</button>
+        </div>
+        
+        <div class="emulator-container" id="emulator-container">
+            <div id="screen_container">
+                <div style="white-space: pre; font: 14px monospace; line-height: 14px; color: #c0c0c0; padding: 20px;">
+                    V86 Emulator Loading...
+                    
+                    Please wait while the operating system boots.
+                </div>
+                <canvas style="display: none"></canvas>
+            </div>
+        </div>
+        
+        <div class="status" id="status">
+            Status: Ready
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color hdd"></div>
+                <span>Hard Disk Image - Pre-installed OS ready to boot</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color iso"></div>
+                <span>CD-ROM Image - Installation or live boot disk</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color dual"></div>
+                <span>Dual Format - Both installed and installation media available</span>
+            </div>
+        </div>
+        
+        <div class="credits">
+            <div class="credits-content">
+                <h3>Credits & Legal</h3>
+                <p><strong>Powered by V86 Emulator</strong> - Created by <strong>copy (Fabian Hemmer)</strong></p>
+                <p>• V86 Project: <a href="https://github.com/copy/v86" target="_blank">github.com/copy/v86</a></p>
+                <p>• Website: <a href="https://copy.sh/" target="_blank">copy.sh</a></p>
+                <p>• Licensed under BSD 2-Clause License</p>
+                <p><strong>GitHub Project:</strong> <a href="https://github.com/TheEvalon/x86" target="_blank">github.com/TheEvalon/x86</a></p>
+                <p><strong>Side Project:</strong> <a href="https://games.ioblako.com" target="_blank">games.ioblako.com</a></p>
+                <p>Contact us: <a href="mailto:info@iOblako.com">info@iOblako.com</a></p>
+                <p class="disclaimer">Educational and preservation purposes only. Ensure OS images are legally obtained.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="build/libv86.js"></script>
+    <script>
+        "use strict";
+        
+        let emulator = null;
+        let mouseCaptured = false;
+        let keyboardCaptured = false;
+        
+        // UI Elements
+        const osSelector = document.getElementById('os-selector');
+        const emulatorContainer = document.getElementById('emulator-container');
+        const emulatorControls = document.getElementById('emulator-controls');
+        const statusElement = document.getElementById('status');
+        const backButton = document.getElementById('back-button');
+        const mouseCaptureBtn = document.getElementById('mouse-capture-btn');
+        const keyboardCaptureBtn = document.getElementById('keyboard-capture-btn');
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            setupOSCards();
+            setupControlButtons();
+        });
+        
+        function setupOSCards() {
+            const osCards = document.querySelectorAll('.os-card');
+            osCards.forEach(card => {
+                const launchButtons = card.querySelectorAll('.launch-button');
+                launchButtons.forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        handleOSLaunch(card, button);
+                    });
+                });
+            });
+        }
+        
+        function setupControlButtons() {
+            backButton.addEventListener('click', showOSSelector);
+            mouseCaptureBtn.addEventListener('click', toggleMouseCapture);
+            keyboardCaptureBtn.addEventListener('click', toggleKeyboardCapture);
+            document.getElementById('special-keys-btn').addEventListener('click', toggleSpecialKeysMenu);
+        }
+        
+        function handleOSLaunch(card, button) {
+            const osName = card.dataset.name;
+            const osType = card.dataset.type;
+            
+            let imagePath, bootType;
+            
+            if (osType === 'dual') {
+                const mode = button.dataset.mode;
+                if (mode === 'hdd') {
+                    imagePath = card.dataset.hdd;
+                    bootType = 'hdd';
+                } else {
+                    imagePath = card.dataset.iso;
+                    bootType = 'cdrom';
+                }
+            } else {
+                imagePath = card.dataset.path;
+                bootType = osType === 'hdd' ? 'hdd' : 'cdrom';
+            }
+            
+            launchOS(osName, imagePath, bootType);
+        }
+        
+        async function launchOS(name, imagePath, bootType) {
+            showEmulator();
+            updateStatus(`Loading ${name}...`);
+            
+            try {
+                // Stop existing emulator
+                if (emulator) {
+                    emulator.destroy();
+                    emulator = null;
+                }
+                
+                // Configure emulator based on OS type
+                const config = {
+                    wasm_path: "build/v86.wasm",
+                    memory_size: getOptimalRAM(name),
+                    vga_memory_size: 32 * 1024 * 1024,
+                    screen_container: document.getElementById("screen_container"),
+                    bios: {
+                        url: "build/seabios.bin",
+                    },
+                    vga_bios: {
+                        url: "build/vgabios.bin",
+                    },
+                    autostart: true,
+                };
+                
+                // Apply Windows NT compatibility settings automatically for compatible OS
+                if (needsWinNTCompatibility(name)) {
+                    config.cpuid_level = 2;
+                    config.acpi = false;
+                }
+                
+                // Set boot device and image
+                if (bootType === 'hdd') {
+                    // If HDD points to a .zip, fetch and extract inner .img and use buffer
+                    if (/\.zip$/i.test(imagePath)) {
+                        updateStatus(`Fetching ZIP: ${imagePath}`);
+                        const response = await fetch(imagePath);
+                        if (!response.ok) throw new Error(`Failed to fetch ZIP (${response.status})`);
+                        const zipArrayBuffer = await response.arrayBuffer();
+                        const zip = await JSZip.loadAsync(zipArrayBuffer);
+                        let imgEntry = null;
+                        // Prefer root-level .img
+                        Object.keys(zip.files).some(name => {
+                            const f = zip.files[name];
+                            if (!f.dir && /(^[^\\\/]+\.img)$/i.test(name)) { imgEntry = f; return true; }
+                            return false;
+                        });
+                        // Fallback: any .img in zip
+                        if (!imgEntry) {
+                            Object.keys(zip.files).some(name => {
+                                const f = zip.files[name];
+                                if (!f.dir && /\.img$/i.test(name)) { imgEntry = f; return true; }
+                                return false;
+                            });
+                        }
+                        if (!imgEntry) {
+                            throw new Error('No .img found inside ZIP');
+                        }
+                        updateStatus(`Extracting ${imgEntry.name} ...`);
+                        const imgBuffer = await imgEntry.async('arraybuffer');
+                        config.hda = { buffer: imgBuffer };
+                    } else {
+                        config.hda = { url: imagePath };
+                    }
+                    config.boot_order = 0x213; // HDD first
+                } else {
+                    // ISO boot: support .zip that contains an .iso
+                    if (/\.zip$/i.test(imagePath)) {
+                        updateStatus(`Fetching ZIP: ${imagePath}`);
+                        const response = await fetch(imagePath);
+                        if (!response.ok) throw new Error(`Failed to fetch ZIP (${response.status})`);
+                        const zipArrayBuffer = await response.arrayBuffer();
+                        const zip = await JSZip.loadAsync(zipArrayBuffer);
+                        let isoEntry = null;
+                        // Prefer root-level .iso
+                        Object.keys(zip.files).some(name => {
+                            const f = zip.files[name];
+                            if (!f.dir && /(^[^\\\/]+\.iso)$/i.test(name)) { isoEntry = f; return true; }
+                            return false;
+                        });
+                        // Fallback: any .iso
+                        if (!isoEntry) {
+                            Object.keys(zip.files).some(name => {
+                                const f = zip.files[name];
+                                if (!f.dir && /\.iso$/i.test(name)) { isoEntry = f; return true; }
+                                return false;
+                            });
+                        }
+                        if (!isoEntry) {
+                            throw new Error('No .iso found inside ZIP');
+                        }
+                        updateStatus(`Extracting ${isoEntry.name} ...`);
+                        const isoBuffer = await isoEntry.async('arraybuffer');
+                        config.cdrom = { buffer: isoBuffer };
+                    } else {
+                        config.cdrom = { url: imagePath };
+                    }
+                    config.boot_order = 0x123; // CDROM first
+                }
+                
+                const compatMsg = needsWinNTCompatibility(name) ? ' (Windows NT compatibility enabled)' : '';
+                updateStatus(`Starting ${name}${compatMsg}...`);
+                emulator = new V86(config);
+                
+                // Set up event handlers
+                emulator.add_listener("emulator-ready", function() {
+                    updateStatus(`${name} started successfully`);
+                    enableControls();
+                    
+                    // Enable mouse and keyboard by default
+                    emulator.mouse_set_status(true);
+                    emulator.keyboard_set_status(true);
+                    keyboardCaptured = true;
+                    updateControlUI();
+                });
+                
+                emulator.add_listener("emulator-stopped", function() {
+                    updateStatus('Emulator stopped');
+                    disableControls();
+                });
+                
+                // Handle mouse lock/unlock events
+                document.addEventListener('pointerlockchange', function() {
+                    const screenContainer = document.getElementById('screen_container');
+                    if (document.pointerLockElement === screenContainer) {
+                        if (!mouseCaptured) {
+                            mouseCaptured = true;
+                            updateControlUI();
+                            updateStatus('Mouse captured - Press Ctrl+Alt to release');
+                        }
+                    } else {
+                        if (mouseCaptured) {
+                            mouseCaptured = false;
+                            updateControlUI();
+                            updateStatus('Mouse released');
+                        }
+                    }
+                });
+                
+                // Auto-capture mouse on screen click
+                const screenContainer = document.getElementById('screen_container');
+                screenContainer.addEventListener('click', function() {
+                    if (!mouseCaptured) {
+                        toggleMouseCapture();
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error starting emulator:', error);
+                updateStatus(`Failed to start ${name}: ${error.message}`);
+            }
+        }
+        
+        function getOptimalRAM(osName) {
+            // Return optimal RAM size based on OS
+            const ramConfigs = {
+                'Windows 1.01': 4 * 1024 * 1024,      // 4MB
+                'Windows 2.x': 8 * 1024 * 1024,       // 8MB
+                'Windows 3.0': 16 * 1024 * 1024,      // 16MB
+                'Windows 3.11': 32 * 1024 * 1024,     // 32MB
+                'Windows 98': 128 * 1024 * 1024,      // 128MB
+                'Windows NT 4.0': 256 * 1024 * 1024,  // 256MB
+                'Windows NT 5.0': 512 * 1024 * 1024,  // 512MB
+                'Windows 2000': 512 * 1024 * 1024,    // 512MB
+                'Windows XP': 512 * 1024 * 1024,      // 512MB
+                'Haiku': 256 * 1024 * 1024,           // 256MB
+                'Damn Small Linux': 64 * 1024 * 1024, // 64MB
+                'Android x86': 512 * 1024 * 1024,     // 512MB
+            };
+            
+            return ramConfigs[osName] || 128 * 1024 * 1024; // Default 128MB
+        }
+        
+        function needsWinNTCompatibility(osName) {
+            // Return true for OS that need Windows NT compatibility mode
+            const winntOSes = [
+                'Windows NT 4.0',
+                'Windows NT 5.0',
+                'Windows 2000',
+                'Windows XP'
+            ];
+            
+            return winntOSes.includes(osName);
+        }
+        
+        
+        function showOSSelector() {
+            osSelector.style.display = 'grid';
+            emulatorContainer.style.display = 'none';
+            emulatorControls.style.display = 'none';
+            statusElement.style.display = 'none';
+            
+            if (emulator) {
+                emulator.destroy();
+                emulator = null;
+            }
+            
+            mouseCaptured = false;
+            keyboardCaptured = false;
+        }
+        
+        function showEmulator() {
+            osSelector.style.display = 'none';
+            emulatorContainer.style.display = 'block';
+            emulatorControls.style.display = 'flex';
+            statusElement.style.display = 'block';
+        }
+        
+        function toggleMouseCapture() {
+            if (!emulator) return;
+            
+            if (mouseCaptured) {
+                if (document.exitPointerLock) {
+                    document.exitPointerLock();
+                }
+                mouseCaptured = false;
+                updateControlUI();
+                updateStatus('Mouse released');
+            } else {
+                try {
+                    emulator.lock_mouse();
+                    mouseCaptured = true;
+                    updateControlUI();
+                    updateStatus('Mouse captured - Press Ctrl+Alt to release');
+                } catch (error) {
+                    console.error('Failed to capture mouse:', error);
+                    updateStatus('Failed to capture mouse');
+                }
+            }
+        }
+        
+        function toggleKeyboardCapture() {
+            if (!emulator) return;
+            
+            if (keyboardCaptured) {
+                emulator.keyboard_set_status(false);
+                keyboardCaptured = false;
+                updateControlUI();
+                updateStatus('Keyboard released');
+            } else {
+                emulator.keyboard_set_status(true);
+                keyboardCaptured = true;
+                updateControlUI();
+                updateStatus('Keyboard captured');
+            }
+        }
+        
+        function updateControlUI() {
+            // Update mouse capture button
+            if (mouseCaptured) {
+                mouseCaptureBtn.textContent = 'Release Mouse';
+                mouseCaptureBtn.classList.add('active');
+            } else {
+                mouseCaptureBtn.textContent = 'Capture Mouse';
+                mouseCaptureBtn.classList.remove('active');
+            }
+            
+            // Update keyboard capture button
+            if (keyboardCaptured) {
+                keyboardCaptureBtn.textContent = 'Release Keyboard';
+                keyboardCaptureBtn.classList.add('active');
+            } else {
+                keyboardCaptureBtn.textContent = 'Capture Keyboard';
+                keyboardCaptureBtn.classList.remove('active');
+            }
+        }
+        
+        function enableControls() {
+            mouseCaptureBtn.disabled = false;
+            keyboardCaptureBtn.disabled = false;
+            document.getElementById('special-keys-btn').disabled = false;
+        }
+        
+        function disableControls() {
+            mouseCaptureBtn.disabled = true;
+            keyboardCaptureBtn.disabled = true;
+            document.getElementById('special-keys-btn').disabled = true;
+            mouseCaptured = false;
+            keyboardCaptured = false;
+            updateControlUI();
+            hideSpecialKeysMenu();
+        }
+        
+        function updateStatus(message) {
+            statusElement.textContent = `Status: ${message}`;
+        }
+        
+        function toggleSpecialKeysMenu() {
+            const menu = document.getElementById('special-keys-menu');
+            const button = document.getElementById('special-keys-btn');
+            
+            if (menu.classList.contains('show')) {
+                hideSpecialKeysMenu();
+            } else {
+                showSpecialKeysMenu();
+            }
+        }
+        
+        function showSpecialKeysMenu() {
+            const menu = document.getElementById('special-keys-menu');
+            const button = document.getElementById('special-keys-btn');
+            
+            menu.classList.add('show');
+            button.textContent = 'Special Keys ▲';
+            
+            // Add click listeners to menu items
+            const keyItems = menu.querySelectorAll('.key-item');
+            keyItems.forEach(item => {
+                item.addEventListener('click', handleSpecialKeyClick);
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', handleOutsideClick);
+        }
+        
+        function hideSpecialKeysMenu() {
+            const menu = document.getElementById('special-keys-menu');
+            const button = document.getElementById('special-keys-btn');
+            
+            menu.classList.remove('show');
+            button.textContent = 'Special Keys ▼';
+            
+            // Remove event listeners
+            document.removeEventListener('click', handleOutsideClick);
+        }
+        
+        function handleOutsideClick(event) {
+            const container = document.querySelector('.special-keys-container');
+            if (!container.contains(event.target)) {
+                hideSpecialKeysMenu();
+            }
+        }
+        
+        function handleSpecialKeyClick(event) {
+            event.stopPropagation();
+            const keyCombo = event.currentTarget.getAttribute('data-keys');
+            const keyName = event.currentTarget.querySelector('.key-name').textContent;
+            
+            sendSpecialKey(keyCombo);
+            updateStatus(`Sent special key: ${keyName}`);
+            hideSpecialKeysMenu();
+        }
+        
+        async function sendSpecialKey(keyCombo) {
+            if (!emulator) return;
+            
+            try {
+                // Map key combinations to their respective scancodes or key combinations
+                switch(keyCombo.toLowerCase()) {
+                    case 'ctrl+alt+delete':
+                        // Send Ctrl+Alt+Delete using scancodes
+                        await emulator.keyboard_send_scancodes([
+                            0x1d,        // Ctrl press
+                            0x38,        // Alt press  
+                            0x53,        // Delete press
+                            0x53 | 0x80, // Delete release
+                            0x38 | 0x80, // Alt release
+                            0x1d | 0x80  // Ctrl release
+                        ], 10);
+                        break;
+                    case 'ctrl+alt+end':
+                        await emulator.keyboard_send_scancodes([
+                            0x1d,        // Ctrl press
+                            0x38,        // Alt press
+                            0xe0, 0x4f,  // End press (extended)
+                            0xe0, 0x4f | 0x80, // End release
+                            0x38 | 0x80, // Alt release
+                            0x1d | 0x80  // Ctrl release
+                        ], 10);
+                        break;
+                    case 'ctrl+shift+escape':
+                        await emulator.keyboard_send_scancodes([
+                            0x1d,        // Ctrl press
+                            0x2a,        // Shift press
+                            0x01,        // Escape press
+                            0x01 | 0x80, // Escape release
+                            0x2a | 0x80, // Shift release
+                            0x1d | 0x80  // Ctrl release
+                        ], 10);
+                        break;
+                    case 'alt+tab':
+                        await emulator.keyboard_send_scancodes([
+                            0x38,        // Alt press
+                            0x0f,        // Tab press
+                            0x0f | 0x80, // Tab release
+                            0x38 | 0x80  // Alt release
+                        ], 10);
+                        break;
+                    case 'alt+f4':
+                        await emulator.keyboard_send_scancodes([
+                            0x38,        // Alt press
+                            0x3e,        // F4 press
+                            0x3e | 0x80, // F4 release
+                            0x38 | 0x80  // Alt release
+                        ], 10);
+                        break;
+                    case 'f1':
+                        await emulator.keyboard_send_scancodes([0x3b, 0x3b | 0x80], 10);
+                        break;
+                    case 'f2':
+                        await emulator.keyboard_send_scancodes([0x3c, 0x3c | 0x80], 10);
+                        break;
+                    case 'f3':
+                        await emulator.keyboard_send_scancodes([0x3d, 0x3d | 0x80], 10);
+                        break;
+                    case 'f4':
+                        await emulator.keyboard_send_scancodes([0x3e, 0x3e | 0x80], 10);
+                        break;
+                    case 'f5':
+                        await emulator.keyboard_send_scancodes([0x3f, 0x3f | 0x80], 10);
+                        break;
+                    case 'f6':
+                        await emulator.keyboard_send_scancodes([0x40, 0x40 | 0x80], 10);
+                        break;
+                    case 'f7':
+                        await emulator.keyboard_send_scancodes([0x41, 0x41 | 0x80], 10);
+                        break;
+                    case 'f8':
+                        await emulator.keyboard_send_scancodes([0x42, 0x42 | 0x80], 10);
+                        break;
+                    case 'f9':
+                        await emulator.keyboard_send_scancodes([0x43, 0x43 | 0x80], 10);
+                        break;
+                    case 'f10':
+                        await emulator.keyboard_send_scancodes([0x44, 0x44 | 0x80], 10);
+                        break;
+                    case 'f11':
+                        await emulator.keyboard_send_scancodes([0x57, 0x57 | 0x80], 10);
+                        break;
+                    case 'f12':
+                        await emulator.keyboard_send_scancodes([0x58, 0x58 | 0x80], 10);
+                        break;
+                    case 'windows':
+                        // Left Windows key
+                        await emulator.keyboard_send_scancodes([0xe0, 0x5b, 0xe0, 0x5b | 0x80], 10);
+                        break;
+                    case 'menu':
+                        // Menu/Application key
+                        await emulator.keyboard_send_scancodes([0xe0, 0x5d, 0xe0, 0x5d | 0x80], 10);
+                        break;
+                    case 'printscreen':
+                        // Print Screen
+                        await emulator.keyboard_send_scancodes([0xe0, 0x2a, 0xe0, 0x37, 0xe0, 0x37 | 0x80, 0xe0, 0x2a | 0x80], 10);
+                        break;
+                    case 'scrolllock':
+                        // Scroll Lock
+                        await emulator.keyboard_send_scancodes([0x46, 0x46 | 0x80], 10);
+                        break;
+                    case 'pause':
+                        // Pause/Break
+                        await emulator.keyboard_send_scancodes([0xe1, 0x1d, 0x45, 0xe1, 0x9d, 0xc5], 10);
+                        break;
+                    case 'insert':
+                        // Insert
+                        await emulator.keyboard_send_scancodes([0xe0, 0x52, 0xe0, 0x52 | 0x80], 10);
+                        break;
+                    default:
+                        console.warn('Unknown key combination:', keyCombo);
+                        updateStatus(`Unknown key combination: ${keyCombo}`);
+                }
+            } catch (error) {
+                console.error('Failed to send special key:', error);
+                updateStatus(`Failed to send special key: ${keyCombo}`);
+            }
+        }
+        
+        // Global keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+Alt to release mouse
+            if (e.ctrlKey && e.altKey && !e.shiftKey && mouseCaptured) {
+                e.preventDefault();
+                if (document.exitPointerLock) {
+                    document.exitPointerLock();
+                }
+            }
+            // Ctrl+Alt+Shift to release keyboard
+            else if (e.ctrlKey && e.altKey && e.shiftKey && keyboardCaptured) {
+                e.preventDefault();
+                toggleKeyboardCapture();
+            }
+        });
+        
+        // Check for auto-launch parameter
+        function checkAutoLaunch() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const autolaunch = urlParams.get('autolaunch');
+            
+            if (autolaunch === 'windowsnt4') {
+                // Find Windows NT 4.0 card and auto-launch it
+                const ntCard = document.querySelector('[data-name="Windows NT 4.0"]');
+                if (ntCard) {
+                    const launchButton = ntCard.querySelector('.launch-button');
+                    if (launchButton) {
+                        // Small delay to ensure page is fully loaded
+                        setTimeout(() => {
+                            launchButton.click();
+                        }, 500);
+                    }
+                }
+            }
+        }
+        
+        // Initialize
+        disableControls();
+        updateStatus('Select an operating system to launch');
+        
+        // Check for auto-launch after page loads
+        document.addEventListener('DOMContentLoaded', checkAutoLaunch);
+    </script>
+</body>
+</html>
