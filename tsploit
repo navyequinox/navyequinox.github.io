@@ -80,6 +80,7 @@ local Window = Rayfield:CreateWindow({
 local Tab = Window:CreateTab("Player", "square-user")
 local LBBGTab = Window:CreateTab("LBBG", 8277401585)
 local TRDTab = Window:CreateTab("TRD", 8277401585)
+local KOTab = Window:CreateTab("KO", 8277401585)
 
 local Slider = Tab:CreateSlider({
 	Name = "Sprint",
@@ -139,6 +140,26 @@ local Slider = Tab:CreateSlider({
 	end,
 })
 
+local spinning2 = false
+local spinSpeed2 = 0
+local spinConnection = nil
+
+local Slider = Tab:CreateSlider({
+	Name = "Spin (Alt)",
+	Range = {0, 100},
+	Increment = 1,
+	Suffix = "",
+	CurrentValue = 10,
+	Flag = "Slider13", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+	Callback = function(spin2)
+		spinSpeed2 = spin2
+		if spin2 > 0 then
+			spinning2 = true
+		else
+			spinning2 = false
+		end
+	end,
+})
 
 local character = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
 
@@ -147,6 +168,13 @@ game:GetService("RunService").RenderStepped:Connect(function()
 		character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(spinSpeed), 0)
 	end
 end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+	if spinning2 and character and character:FindFirstChild("HumanoidRootPart") then
+		character.HumanoidRootPart.CFrame = character.HumanoidRootPart.CFrame * CFrame.Angles(0, 0, math.rad(spinSpeed2))
+	end
+end)
+
 
 local players = game:GetService("Players")
 local player = players.LocalPlayer
@@ -490,3 +518,12 @@ local Button = Tab:CreateButton({
 		loadstring(game:HttpGet("https://raw.githubusercontent.com/navyequinox/navyequinox.github.io/refs/heads/main/trent%20spectate"))()
 	end,
 })
+
+
+local Button = KOTab:CreateButton({
+	Name = "",
+	Callback = function()
+		
+	end,
+})
+
