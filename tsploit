@@ -1,7 +1,7 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-	Name = "trentxploitr",
+	Name = "trentxploitr v0.1",
 	Icon = 108289954, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
 	LoadingTitle = "Trentalicious!",
 	LoadingSubtitle = "Trent",
@@ -78,6 +78,7 @@ local Window = Rayfield:CreateWindow({
 })
 
 local Tab = Window:CreateTab("Player", "square-user")
+local CameraTab = Window:CreateTab("Camera", 8277401585)
 local LBBGTab = Window:CreateTab("LBBG", 8277401585)
 local TRDTab = Window:CreateTab("TRD", 8277401585)
 local KOTab = Window:CreateTab("KO", 8277401585)
@@ -534,35 +535,35 @@ local Button = Tab:CreateButton({
 	end,
 })
 
-local Button = Tab:CreateButton({
+local Button = CameraTab:CreateButton({
 	Name = "Unanchor",
 	Callback = function()
 		game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
 	end,
 })
 
-local Button = Tab:CreateButton({
+local Button = CameraTab:CreateButton({
 	Name = "CameraMinZoomDistance to 0",
 	Callback = function()
 		game.Players.LocalPlayer.Character.Humanoid.CameraMinZoomDistance = 0
 	end,
 })
 
-local Button = Tab:CreateButton({
+local Button = CameraTab:CreateButton({
 	Name = "CameraMinZoomDistance to 10",
 	Callback = function()
-		game.Players.LocalPlayer.Character.Humanoid.CameraMinZoomDistance = 10
+		game.Players.LocalPlayer.CameraMinZoomDistance = 10
 	end,
 })
 
-local Button = Tab:CreateButton({
+local Button = CameraTab:CreateButton({
 	Name = "CameraMaxZoomDistance to 128",
 	Callback = function()
 		game.Players.LocalPlayer.Character.Humanoid.CameraMaxZoomDistance = 128
 	end,
 })
 
-local Button = Tab:CreateButton({
+local Button = CameraTab:CreateButton({
 	Name = "CameraMaxZoomDistance to 99999",
 	Callback = function()
 		game.Players.LocalPlayer.Character.Humanoid.CameraMaxZoomDistance = 99999
