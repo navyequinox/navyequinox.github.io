@@ -545,7 +545,7 @@ local Button = CameraTab:CreateButton({
 local Button = CameraTab:CreateButton({
 	Name = "CameraMinZoomDistance to 0",
 	Callback = function()
-		game.Players.LocalPlayer.Character.Humanoid.CameraMinZoomDistance = 0
+		game.Players.LocalPlayer.CameraMinZoomDistance = 0
 	end,
 })
 
@@ -559,13 +559,13 @@ local Button = CameraTab:CreateButton({
 local Button = CameraTab:CreateButton({
 	Name = "CameraMaxZoomDistance to 128",
 	Callback = function()
-		game.Players.LocalPlayer.Character.Humanoid.CameraMaxZoomDistance = 128
+		game.Players.LocalPlayer.CameraMinZoomDistance = 128
 	end,
 })
 
 local Button = CameraTab:CreateButton({
 	Name = "CameraMaxZoomDistance to 99999",
 	Callback = function()
-		game.Players.LocalPlayer.Character.Humanoid.CameraMaxZoomDistance = 99999
+		game.Players.LocalPlayer.CameraMinZoomDistance = 99999
 	end,
 })
