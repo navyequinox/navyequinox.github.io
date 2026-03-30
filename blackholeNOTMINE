@@ -104,7 +104,7 @@ local function createControlButton()
  
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
-    button.Position = UDim2.new(0.5, -50, 0, 100)
+    button.Position = UDim2.new(0.5, -50, 0, 150)
     button.Text = "SINGULARITY"
     button.Parent = screenGui
  
