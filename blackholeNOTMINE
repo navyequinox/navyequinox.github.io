@@ -105,31 +105,33 @@ end
 local function createControlButton()
     local screenGui = Instance.new("ScreenGui")
     local button = Instance.new("TextButton")
+    local button2 = Instance.new("TextButton")
  
     screenGui.Name = "BlackHoleControlGUI"
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
  
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
-    button.Position = UDim2.new(0.5, 50, -50, 50)
+    button.Position = UDim2.new(0.5, 50, 0, 50)
     button.Text = "Singularity |===[-]|"
     button.Parent = screenGui
+    button.BackgroundColor3 = Color3.fromRGB(41, 17, 35)
  
     button.MouseButton1Click:Connect(function()
         toggleBlackHole()
         if blackHoleActive then
             button.Text = "Singularity |[+]===|"
+            button.TextColor3 = Color3.fromRGB(110, 192, 140)
         else
             button.Text = "Singularity |===[-]|"
+            button.TextColor3 = Color3.fromRGB(239, 91, 91)
         end
     end)
 
 
-
-
     local textBox = Instance.new("TextBox")
-    textBox.Size = UDim2.new(0, 200, 0, 50) -- width: 200px, height: 50px
-    textBox.Position = UDim2.new(0.5, -50, 0, 10)
+    textBox.Size = UDim2.new(0, 100, 0, 25) 
+    textBox.Position = UDim2.new(0.5, 50, 0, 10)
     textBox.PlaceholderText = "Item Name"
     textBox.Text = ""
     textBox.Font = Enum.Font.SourceSans
@@ -138,13 +140,14 @@ local function createControlButton()
     textBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     textBox.Parent = screenGui
 
-    button.Name = "setItem"
-    button.Size = UDim2.new(0, 100, 0, 50)
-    button.Position = UDim2.new(0.5, -100, 50, 50)
-    button.Text = ""
-    button.Parent = screenGui
+    button2.Name = "setItem"
+    button2.Size = UDim2.new(0, 10, 0, 50)
+    button2.Position = UDim2.new(0.5, 40, 0, 10)
+    button2.Text = ""
+    button2.Parent = screenGui
+    button2.BackgroundColor3 = Color3.fromRGB(177, 83, 182)
  
-    button.MouseButton1Click:Connect(function()
+    button2.MouseButton1Click:Connect(function()
         if accretionDiskName == "" or "all" then
             
         else
