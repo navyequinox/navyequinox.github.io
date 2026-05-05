@@ -137,7 +137,7 @@ local function createControlButton()
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
     button.Position = UDim2.new(0.5, 50, 0, 50)
-    button.Text = "Singularity v1.7"
+    button.Text = "Singularity v1.8"
     button.Parent = screenGui
     button.BackgroundColor3 = Color3.fromRGB(41, 17, 35)
  
@@ -172,10 +172,12 @@ local function createControlButton()
     button2.BackgroundColor3 = Color3.fromRGB(177, 83, 182)
  
     button2.MouseButton1Click:Connect(function()
-        if accretionDiskName == "" or "all" then
+        if textBox.Text == "" or "all" then
             accretionDiskName = "all"
+            textBox.Text = ""
         else
             accretionDiskName = textBox.Text
+            textBox.Text = ""
         end
     end)
 
