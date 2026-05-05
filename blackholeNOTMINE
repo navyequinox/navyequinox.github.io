@@ -105,7 +105,7 @@ local function createControlButton()
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
     button.Position = UDim2.new(0.5, 50, 0, 50)
-    button.Text = "Singularity v1.3"
+    button.Text = "Singularity v1.4"
     button.Parent = screenGui
     button.BackgroundColor3 = Color3.fromRGB(41, 17, 35)
  
@@ -148,7 +148,7 @@ local function createControlButton()
 
     button3.Name = "destroyGui"
     button3.Size = UDim2.new(0, 10, 0, 10)
-    button3.Position = UDim2.new(0.5, 40, 0, 35)
+    button3.Position = UDim2.new(0.5, 40, 0, 50)
     button3.Text = "[X]"
     button3.Parent = screenGui
     button3.BackgroundColor3 = Color3.fromRGB(100, 38, 62)
