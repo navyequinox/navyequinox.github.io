@@ -5,7 +5,7 @@ local Workspace = game:GetService("Workspace")
  
 local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
- 
+local accretionDiskName = "Cheese"
 local Folder = Instance.new("Folder", Workspace)
 local Part = Instance.new("Part", Folder)
 local Attachment1 = Instance.new("Attachment", Part)
@@ -41,8 +41,6 @@ if not getgenv().Network then
  
     EnablePartControl()
 end
-    
-local accretionDiskName = "Cheese"
 
 local function ForcePart(v)
         if v:IsA("Part") and not v.Anchored and not v.Parent:FindFirstChild("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
@@ -81,16 +79,12 @@ local function toggleBlackHole()
     if blackHoleActive then
         for _, v in next, Workspace:GetDescendants() do
             ForcePart(v)
-            task.wait(0.01)
         end
- 
         Workspace.DescendantAdded:Connect(function(v)
             if blackHoleActive then
                 ForcePart(v)
-                task.wait(0.01)
             end
         end)
- 
         spawn(function()
             while blackHoleActive and RunService.RenderStepped:Wait() do
                 Attachment1.WorldCFrame = humanoidRootPart.CFrame
@@ -156,22 +150,5 @@ end
  
 createControlButton()
 toggleBlackHole()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
