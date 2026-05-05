@@ -97,6 +97,7 @@ local function createControlButton()
     local screenGui = Instance.new("ScreenGui")
     local button = Instance.new("TextButton")
     local button2 = Instance.new("TextButton")
+    local button3 = Instance.new("TextButton")
  
     screenGui.Name = "BlackHoleControlGUI"
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
@@ -104,7 +105,7 @@ local function createControlButton()
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
     button.Position = UDim2.new(0.5, 50, 0, 50)
-    button.Text = "Singularity v1.2"
+    button.Text = "Singularity v1.3"
     button.Parent = screenGui
     button.BackgroundColor3 = Color3.fromRGB(41, 17, 35)
  
@@ -122,7 +123,7 @@ local function createControlButton()
 
     local textBox = Instance.new("TextBox")
     textBox.Size = UDim2.new(0, 100, 0, 25) 
-    textBox.Position = UDim2.new(0.5, 50, 0, 10)
+    textBox.Position = UDim2.new(0.5, 50, 0, 25)
     textBox.PlaceholderText = "Item Name"
     textBox.Text = ""
     textBox.Font = Enum.Font.SourceSans
@@ -133,7 +134,7 @@ local function createControlButton()
 
     button2.Name = "setItem"
     button2.Size = UDim2.new(0, 10, 0, 50)
-    button2.Position = UDim2.new(0.5, 40, 0, 10)
+    button2.Position = UDim2.new(0.5, 40, 0, 25)
     button2.Text = ""
     button2.Parent = screenGui
     button2.BackgroundColor3 = Color3.fromRGB(177, 83, 182)
@@ -144,6 +145,17 @@ local function createControlButton()
         else
             accretionDiskName = textBox.Text
         end
+
+    button3.Name = "destroyGui"
+    button3.Size = UDim2.new(0, 10, 0, 10)
+    button3.Position = UDim2.new(0.5, 40, 0, 35)
+    button3.Text = "[X]"
+    button3.Parent = screenGui
+    button3.BackgroundColor3 = Color3.fromRGB(100, 38, 62)
+    button3.MouseButton1Click:Connect(function()
+        screenGui:Destroy()
+ end)
+
 
     end)
 end
