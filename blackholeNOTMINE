@@ -137,7 +137,7 @@ local function createControlButton()
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
     button.Position = UDim2.new(0.5, 50, 0, 50)
-    button.Text = "Singularity v1.5"
+    button.Text = "Singularity v1.6"
     button.Parent = screenGui
     button.BackgroundColor3 = Color3.fromRGB(41, 17, 35)
  
@@ -147,7 +147,7 @@ local function createControlButton()
             button.Text = "Singularity |[+]===|"
             button.TextColor3 = Color3.fromRGB(110, 192, 140)
         else
-            button.Text = "Singularity |===[-]|"
+            button.Text = accretionDiskName
             button.TextColor3 = Color3.fromRGB(239, 91, 91)
         end
     end)
