@@ -142,26 +142,16 @@ local function createControlButton()
     local infoButton = Instance.new("TextButton")
     local drag = Instance.new("Frame")
  
-    local DragModule = require(script.Parent.DragModule)
-    local DragService = DragModule.New()
-    local CollectionService = game:GetService("CollectionService")
-    DragService:SyncObjects()
-
     screenGui.Name = "BlackHoleControlGUI"
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-
-
-
-
 
     drag.Name = "Handler"
     drag.Size = UDim2.new(0, 110, 0, 15) 
     drag.Position = UDim2.new(0.5, 40, 0, 40)
-    drag.Text = "S1NGULAR1TY // v1.9"
+    drag.Text = "S1NGULAR1TY v1.9"
     drag.Parent = screenGui
     drag.BackgroundColor3 = Color3.fromRGB(101, 62, 91)
     drag.TextColor3 = Color3.fromRGB(182, 148, 180)
-    CollectionService:AddTag(drag, "DragHandler")
  
  
     button.Name = "ToggleBlackHoleButton"
@@ -241,6 +231,5 @@ end
  
 createControlButton()
 toggleBlackHole()
-
 
 
