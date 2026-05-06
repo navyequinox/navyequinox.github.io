@@ -148,8 +148,8 @@ local function createControlButton()
 
     dragGuy.Name = "Handler"
     dragGuy.Size = UDim2.new(0, 110, 0, 10) 
-    dragGuy.Position = UDim2.new(0.5, 40, 0, -10)
-    dragGuy.Text = "S1NGULAR1TY // v1.95"
+    dragGuy.Position = UDim2.new(0.5, 40, 0, 10)
+    dragGuy.Text = "S1NGULAR1TY // v1.97"
     dragGuy.Parent = screenGui
     dragGuy.BackgroundColor3 = Color3.fromRGB(101, 62, 91)
     dragGuy.TextColor3 = Color3.fromRGB(182, 148, 180)
