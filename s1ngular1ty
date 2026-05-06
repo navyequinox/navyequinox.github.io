@@ -141,18 +141,9 @@ local function createControlButton()
     local button3 = Instance.new("TextButton")
     local infoButton = Instance.new("TextButton")
     local drag = Instance.new("Frame")
- 
-    local DragModule = require(script.Parent.DragModule)
-    local DragService = DragModule.New()
-    local CollectionService = game:GetService("CollectionService")
-    DragService:SyncObjects()
 
     screenGui.Name = "BlackHoleControlGUI"
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
-
-
-
-
 
     drag.Name = "Handler"
     drag.Size = UDim2.new(0, 110, 0, 15) 
@@ -161,8 +152,6 @@ local function createControlButton()
     drag.Parent = screenGui
     drag.BackgroundColor3 = Color3.fromRGB(101, 62, 91)
     drag.TextColor3 = Color3.fromRGB(182, 148, 180)
-    CollectionService:AddTag(drag, "DragHandler")
- 
  
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
@@ -217,7 +206,24 @@ local function createControlButton()
         screenGui:Destroy()
  end)
  
+    infoButton.Name = "test"
+    infoButton.Size = UDim2.new(0, 10, 0, 10)
+    infoButton.Position = UDim2.new(0.5, 40, 0, 75)
+    infoButton.Text = "[+]"
+    infoButton.Parent = screenGui
+    infoButton.BackgroundColor3 = Color3.fromRGB(39, 19, 53)
+    infoButton.TextColor3 = Color3.fromRGB(121, 255, 77)
+    infoButton.MouseButton1Click:Connect(function()
+        
+    toggleInfo()
+        if infoScreenOn == true then
+            infoButton.Text = "[-]"
 
+        else
+            infoButton.Text = "[+]"
+        
+    end
+end)
 
 
 
