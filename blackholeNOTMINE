@@ -130,6 +130,7 @@ local function createControlButton()
     local button = Instance.new("TextButton")
     local button2 = Instance.new("TextButton")
     local button3 = Instance.new("TextButton")
+    local whatItem = Instance.new("Frame")
  
     screenGui.Name = "BlackHoleControlGUI"
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
@@ -147,7 +148,7 @@ local function createControlButton()
             button.Text = "Singularity |[+]===|"
             button.TextColor3 = Color3.fromRGB(110, 192, 140)
         else
-            button.Text = accretionDiskName
+            button.Text = "Singularity |===[-]|"
             button.TextColor3 = Color3.fromRGB(239, 91, 91)
         end
     end)
