@@ -142,13 +142,13 @@ local function createControlButton()
     local infoButton = Instance.new("TextButton")
     local dragGuy = Instance.new("TextButton")
     local textBox = Instance.new("TextBox")
-    
+
     screenGui.Name = "BlackHoleControlGUI"
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
     dragGuy.Name = "Handler"
     dragGuy.Size = UDim2.new(0, 110, 0, 15) 
-    dragGuy.Position = UDim2.new(0.5, 40, 0, 40)
+    dragGuy.Position = UDim2.new(0.5, 40, 0, 30)
     dragGuy.Text = "S1NGULAR1TY // v1.9"
     dragGuy.Parent = screenGui
     dragGuy.BackgroundColor3 = Color3.fromRGB(101, 62, 91)
@@ -157,7 +157,8 @@ local function createControlButton()
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
     button.Position = UDim2.new(0.5, 50, 0, 50)
-    button.Text = "Singularity"
+    button.Text = "/Singularity/"
+    button.TextColor3 = Color3.fromRGB(101, 62, 91)
     button.Parent = screenGui
     button.BackgroundColor3 = Color3.fromRGB(41, 17, 35)
  
@@ -208,7 +209,7 @@ local function createControlButton()
  
     infoButton.Name = "test"
     infoButton.Size = UDim2.new(0, 10, 0, 10)
-    infoButton.Position = UDim2.new(0.5, 40, 0, 75)
+    infoButton.Position = UDim2.new(0.5, 40, 0, 85)
     infoButton.Text = "[+]"
     infoButton.Parent = screenGui
     infoButton.BackgroundColor3 = Color3.fromRGB(39, 19, 53)
