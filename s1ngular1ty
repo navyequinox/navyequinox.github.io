@@ -140,18 +140,19 @@ local function createControlButton()
     local button2 = Instance.new("TextButton")
     local button3 = Instance.new("TextButton")
     local infoButton = Instance.new("TextButton")
-    local drag = Instance.new("Frame")
-
+    local dragGuy = Instance.new("TextButton")
+    local textBox = Instance.new("TextBox")
+    
     screenGui.Name = "BlackHoleControlGUI"
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
-    drag.Name = "Handler"
-    drag.Size = UDim2.new(0, 110, 0, 15) 
-    drag.Position = UDim2.new(0.5, 40, 0, 40)
-    drag.Text = "S1NGULAR1TY // v1.9"
-    drag.Parent = screenGui
-    drag.BackgroundColor3 = Color3.fromRGB(101, 62, 91)
-    drag.TextColor3 = Color3.fromRGB(182, 148, 180)
+    dragGuy.Name = "Handler"
+    dragGuy.Size = UDim2.new(0, 110, 0, 15) 
+    dragGuy.Position = UDim2.new(0.5, 40, 0, 40)
+    dragGuy.Text = "S1NGULAR1TY // v1.9"
+    dragGuy.Parent = screenGui
+    dragGuy.BackgroundColor3 = Color3.fromRGB(101, 62, 91)
+    dragGuy.TextColor3 = Color3.fromRGB(182, 148, 180)
  
     button.Name = "ToggleBlackHoleButton"
     button.Size = UDim2.new(0, 100, 0, 50)
@@ -172,7 +173,6 @@ local function createControlButton()
     end)
 
 
-    local textBox = Instance.new("TextBox")
     textBox.Size = UDim2.new(0, 100, 0, 25) 
     textBox.Position = UDim2.new(0.5, 50, 0, 25)
     textBox.PlaceholderText = "Item Name"
