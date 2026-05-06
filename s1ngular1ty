@@ -147,7 +147,7 @@ local function createControlButton()
     screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
 
     dragGuy.Name = "Handler"
-    dragGuy.Size = UDim2.new(0, 110, 0, 15) 
+    dragGuy.Size = UDim2.new(0, 110, 0, 0) 
     dragGuy.Position = UDim2.new(0.5, 40, 0, 30)
     dragGuy.Text = "S1NGULAR1TY // v1.9"
     dragGuy.Parent = screenGui
@@ -198,7 +198,7 @@ local function createControlButton()
 
     button3.Name = "destroyGui"
     button3.Size = UDim2.new(0, 10, 0, 10)
-    button3.Position = UDim2.new(0.5, 40, 0, 75)
+    button3.Position = UDim2.new(0.5, 40, 0, 85)
     button3.Text = "[X]"
     button3.Parent = screenGui
     button3.BackgroundColor3 = Color3.fromRGB(100, 38, 62)
@@ -209,7 +209,7 @@ local function createControlButton()
  
     infoButton.Name = "test"
     infoButton.Size = UDim2.new(0, 10, 0, 10)
-    infoButton.Position = UDim2.new(0.5, 40, 0, 85)
+    infoButton.Position = UDim2.new(0.5, 40, 0, 75)
     infoButton.Text = "[+]"
     infoButton.Parent = screenGui
     infoButton.BackgroundColor3 = Color3.fromRGB(39, 19, 53)
