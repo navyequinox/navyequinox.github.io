@@ -6484,7 +6484,7 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()")
+		queueteleport("loadstring(game:HttpGet("https://raw.githubusercontent.com/navyequinox/navyequinox.github.io/refs/heads/main/trentYield"))()")
 	end
 end)
 
@@ -11650,10 +11650,11 @@ addcmd('randgrippos',{},function(args, speaker)
     local randgripposvar1 = 0
     local randgripposvar2 = 0
     local randgripposvar3 = 0
-	randgrippos1 = math.random(-10,10)
+
+	for i,v in pairs(speaker.Character:GetDescendants()) do
+    randgrippos1 = math.random(-10,10)
 	randgrippos2 = math.random(-10,10)
 	randgrippos3 = math.random(-10,10)
-	for i,v in pairs(speaker.Character:GetDescendants()) do
 		if v:IsA("Tool") then
 			v.Parent = speaker:FindFirstChildOfClass("Backpack")
 			v.GripPos = Vector3.new(args[1]*randgrippos1,args[2]*randgrippos2,args[3]*randgrippos3)
