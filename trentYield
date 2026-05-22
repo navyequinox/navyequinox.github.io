@@ -11652,9 +11652,9 @@ addcmd('randgrippos',{},function(args, speaker)
     local randgripposvar3 = 0
 	for i,v in pairs(speaker.Character:GetDescendants()) do
 		if v:IsA("Tool") then
-        	randgrippos = math.random(-10,10)
-	        randgrippos = math.random(-10,10)
-	        randgrippos = math.random(-10,10)
+        	randgrippos1 = math.random(-10,10)
+	        randgrippos2 = math.random(-10,10)
+	        randgrippos3 = math.random(-10,10)
 			v.Parent = speaker:FindFirstChildOfClass("Backpack")
 			v.GripPos = Vector3.new(args[1]*randgrippos1,args[2]*randgrippos2,args[3]*randgrippos3)
 			v.Parent = speaker.Character
