@@ -354,7 +354,7 @@ Title.BorderSizePixel = 0
 Title.Size = UDim2.new(0, 250, 0, 20)
 Title.Font = Enum.Font.SourceSans
 Title.TextSize = 18
-Title.Text = "Infinite Yield FE v" .. currentVersion 
+Title.Text = "Trentfinite Yield FE v" .. currentVersion 
 
 do
 	local emoji = ({
@@ -11663,40 +11663,37 @@ addcmd('randgrippos',{},function(args, speaker)
 	end
 end)
 
-function toolorbit()
-    local x = distance*math.sin(orbit)
-    local y = distance*math.cos(orbit)
-end
 
 
 
 addcmd('orbgrippos',{},function(args, speaker)
-   
+local function toolOrbit()
+    orbit += speed
+    x = distance * math.sin(orbit)
+    y = distance * math.cos(orbit)
+end
 
-local orbit = 0
-local distance = args[2]
-local speed = args[1]
-local rotation = 0
-local x = 0
-local y = 0
-local count = 0
-    
+
+local tools = {}
 for _, descendant in pairs(speaker.Character:GetDescendants()) do
-       if descendant:IsA("Tool") then
-            count = count + 1
+    if descendant:IsA("Tool") then
+        table.insert(tools, descendant)
+    end
+end
+
+
+task.spawn(function()
+    while toolsOrbiting do
+        toolOrbit()
+        for _, tool in ipairs(tools) do
+            tool.Parent = speaker:FindFirstChildOfClass("Backpack")
+            tool.GripPos = Vector3.new(x, y, 0)
+            tool.Parent = speaker.Character
         end
-    end         
-
-	for i, v in pairs(speaker.Character:GetDescendants()) do
-		if v:IsA("Tool") then
-            toolorbit()
-			v.Parent = speaker:FindFirstChildOfClass("Backpack")
-			v.GripPos = Vector3.new(x,y,args[3])
-			v.Parent = speaker.Character
-		end
-	end
+        task.wait(0.03) 
+    end
+end)
     
-
 --what the ffffffuck am i doing i suck at this i hate coding I HATE CODING I HATE CODING!
 
 
