@@ -354,7 +354,7 @@ Title.BorderSizePixel = 0
 Title.Size = UDim2.new(0, 250, 0, 20)
 Title.Font = Enum.Font.SourceSans
 Title.TextSize = 18
-Title.Text = "Infinite Yield FE v" .. currentVersion
+Title.Text = "Infinite Yield FE v" .. currentVersion 
 
 do
 	local emoji = ({
@@ -4881,6 +4881,7 @@ CMDs[#CMDs + 1] = {NAME = 'boxreach [num]', DESC = 'Increases the hitbox of your
 CMDs[#CMDs + 1] = {NAME = 'unreach / noreach', DESC = 'Turns off reach'}
 CMDs[#CMDs + 1] = {NAME = 'grippos [X Y Z]', DESC = 'Changes your current tools grip position'}
 CMDs[#CMDs + 1] = {NAME = 'randgrippos [X Y Z]', DESC = 'Changes your current tools grip position, but random'}
+CMDs[#CMDs + 1] = {NAME = 'orbgrippos [speed] [distance] [height]', DESC = 'Tools orbit'}
 CMDs[#CMDs + 1] = {NAME = 'usetools [amount] [delay]', DESC = 'Activates all tools in your backpack at the same time'}
 CMDs[#CMDs + 1] = {NAME = '', DESC = ''}
 CMDs[#CMDs + 1] = {NAME = 'addalias [cmd] [alias]', DESC = 'Adds an alias to a command'}
@@ -6484,7 +6485,7 @@ local TeleportCheck = false
 Players.LocalPlayer.OnTeleport:Connect(function(State)
 	if KeepInfYield and (not TeleportCheck) and queueteleport then
 		TeleportCheck = true
-		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()")
+		queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/navyequinox/navyequinox.github.io/refs/heads/main/trentYield'))()")
 	end
 end)
 
@@ -11660,6 +11661,47 @@ addcmd('randgrippos',{},function(args, speaker)
 			v.Parent = speaker.Character
 		end
 	end
+end)
+
+function toolorbit()
+    local x = distance*math.sin(orbit)
+    local y = distance*math.cos(orbit)
+end
+
+addcmd('orbgrippos',{},function(args, speaker)
+   
+
+    local orbit = 0
+    local distance = args[2]
+    local speed = args[1]
+    local rotation = 0
+    local x = 0
+    local y = 0
+    local count = 0
+    for _, descendant in pairs(speaker.Character:GetDescendants()) do
+       if descendant:IsA("Tool") then
+            count = count + 1
+        end
+    end 
+
+	for i, v in pairs(speaker.Character:GetDescendants()) do
+		if v:IsA("Tool") then
+            toolorbit()
+			v.Parent = speaker:FindFirstChildOfClass("Backpack")
+			v.GripPos = Vector3.new(x,y,args[3])
+			v.Parent = speaker.Character
+		end
+	end
+    
+function toolorbit()
+    x = distance * math.sin(orbit) 
+    y = distance * math.cos(orbit)
+    orbit = 360 / count + orbit
+end
+
+--what the ffffffuck am i doing i suck at this i hate coding I HATE CODING I HATE CODING!
+
+
 end)
 
 addcmd('usetools', {}, function(args, speaker)
