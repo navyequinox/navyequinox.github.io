@@ -1,5 +1,7 @@
 -- fixed by 1sw0rd1 aka deletecar
 -- fuck chatgpt
+--im not an exploiter this has a reason i promise
+--67
 local model_id = "0"
 local imported_model = game:GetObjects("rbxassetid://" .. model_id)[1]
 imported_model.Parent = game.Lighting
