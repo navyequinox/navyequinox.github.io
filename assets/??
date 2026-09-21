@@ -1,0 +1,150 @@
+-- fixed by 1sw0rd1 aka deletecar
+-- fuck chatgpt
+local model_id = "0"
+local imported_model = game:GetObjects("rbxassetid://" .. model_id)[1]
+imported_model.Parent = game.Lighting
+for _, v in next, imported_model:GetDescendants() do
+pcall(function()
+v.Anchored = true
+end)
+end
+local plr = game:GetService("Players").LocalPlayer
+local f3x_name = "Building Tools"
+local destination = workspace
+coroutine.wrap(function()
+task.wait(10)
+imported_model.Parent = nil
+end)()
+function f3xbuildpart(part_type, cframe, destination, size, transparency, colour,
+material, collision, fake_part)
+local sync = plr.Backpack:FindFirstChild(f3x_name).SyncAPI.ServerEndpoint
+created_part = sync:InvokeServer("CreatePart", part_type, cframe, destination)
+if size ~= Vector3.new(4,1,2) then
+spawn(function()
+sync:InvokeServer("SyncResize", {
+{ Part = created_part, CFrame = created_part.CFrame, Size = size }
+})
+end)
+end
+if transparency ~= 0 then
+spawn(function()
+sync:InvokeServer("SyncMaterial", {
+{ Part = created_part, Transparency = transparency }
+})
+end)
+end
+if color ~= BrickColor.new("Medium stone grey").Color then
+spawn(function()
+sync:InvokeServer("SyncColor", {
+{ Part = created_part, Color = colour, UnionColoring = true }
+})
+end)
+end
+if material ~= "Plastic" then
+spawn(function()
+sync:InvokeServer("SyncMaterial", {
+{ Part = created_part, Material = material }
+})
+end)
+end
+if collision ~= true then
+spawn(function()
+sync:InvokeServer("SyncCollision", {
+{ Part = created_part, CanCollide = collision }
+})
+end)
+end
+if fake_part:FindFirstChildOfClass("Texture") then
+texture = fake_part:FindFirstChildOfClass("Texture")
+spawn(function()
+sync:InvokeServer("CreateTextures", {
+{ Part = created_part, Face = texture.Face, TextureType = "Texture" }
+})
+sync:InvokeServer("SyncTexture", {
+{ Part = created_part, Face = texture.Face, TextureType = "Texture",
+StudsPerTileU = texture.StudsPerTileU, StudsPerTileV = texture.StudsPerTileV,
+Texture = texture.Texture, Transparency = texture.Transparency }
+})
+end)
+end
+if fake_part:FindFirstChildOfClass("Decal") then
+decal = fake_part:FindFirstChildOfClass("Decal")
+spawn(function()
+sync:InvokeServer("CreateTextures", {
+{ Part = created_part, Face = decal.Face, TextureType = "Decal" }
+})
+sync:InvokeServer("SyncTexture", {
+{ Part = created_part, Face = decal.Face, TextureType = "Decal",
+Texture = decal.Texture, Transparency = decal.Transparency }
+})
+end)
+end
+if fake_part:FindFirstChildOfClass("SpecialMesh") then
+mesh = fake_part:FindFirstChildOfClass("SpecialMesh")
+spawn(function()
+sync:InvokeServer("AddMesh", {
+{ Part = created_part }
+})
+sync:InvokeServer("SyncMesh", {
+{ Part = created_part, MeshId = mesh.MeshId, TextureId =
+mesh.TextureId, Scale = mesh.Scale }
+})
+end)
+end
+if fake_part:FindFirstChildOfClass("SpotLight") then
+light = fake_part:FindFirstChildOfClass("SpotLight")
+spawn(function()
+sync:InvokeServer("CreateLights", {
+{ Part = created_part, LightType = "SpotLight" }
+})
+sync:InvokeServer("SyncLighting", {
+{ Part = created_part, LightType = "SpotLight", Color = light.Color,
+Range = light.Range, Face = light.Face, Angle = light.Angle, Shadows =
+light.Shadows }
+})
+end)
+end
+if fake_part:FindFirstChildOfClass("PointLight") then
+light = fake_part:FindFirstChildOfClass("PointLight")
+spawn(function()
+sync:InvokeServer("CreateLights", {
+{ Part = created_part, LightType = "PointLight" }
+})
+sync:InvokeServer("SyncLighting", {
+{ Part = created_part, LightType = "PointLight", Color = light.Color,
+Range = light.Range, Shadows = light.Shadows }
+})
+end)
+end
+end
+for _, part in next, imported_model:GetDescendants() do
+task.wait(0.25)
+if part:IsA("Part") then
+if part.Shape == Enum.PartType.Block then
+f3xbuildpart("Normal", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+elseif part.Shape == Enum.PartType.Ball then
+f3xbuildpart("Ball", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+elseif part.Shape == Enum.PartType.Cylinder then
+f3xbuildpart("Cylinder", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+end
+elseif part:IsA("WedgePart") then
+f3xbuildpart("Wedge", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+elseif part:IsA("Seat") then
+f3xbuildpart("Seat", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+elseif part:IsA("TrussPart") then
+f3xbuildpart("Truss", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+elseif part:IsA("VehicleSeat") then
+f3xbuildpart("VehicleSeat", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+elseif part:IsA("SpawnLocation") then
+f3xbuildpart("Spawn", part.CFrame, destination, part.Size,
+part.Transparency, part.Color, part.Material, part.CanCollide, part)
+end
+end
+print("Finished build.")
